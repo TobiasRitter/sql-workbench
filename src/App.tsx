@@ -4,8 +4,7 @@ import { AppBar, BottomNavigation, Box, Button, IconButton, InputAdornment, Pape
 import * as React from 'react';
 import Column from './components/Column';
 import MiniDrawer from './components/Drawer';
-import MenuIcon from '@mui/icons-material/Menu';
-import CloseIcon from '@mui/icons-material/Close';
+import { drawerWidthCollapsed, drawerWidthExpanded } from "./components/Drawer";
 
 function Row({ children }: any) {
   return (
@@ -52,7 +51,7 @@ function App() {
         <MiniDrawer title="Add New Contact" open={open} toggleDrawer={toggleDrawer} />
         <Toolbar />
         <Row>
-          <Box width={open ? 225 : 50}></Box>
+          <Box width={(open ? drawerWidthExpanded : drawerWidthCollapsed) - 15}></Box>
           <Column>
             <NumericInput label="Weight" unit="kg" />
             <NumericInput label="Number" />

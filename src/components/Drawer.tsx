@@ -18,21 +18,22 @@ import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
-const drawerWidth = 240;
+export const drawerWidthExpanded = 240;
+export const drawerWidthCollapsed = 65;
 
 const openedMixin = (theme: Theme): CSSObject => ({
-    width: drawerWidth,
+    width: drawerWidthExpanded,
     overflowX: 'hidden',
 });
 
 const closedMixin = (theme: Theme): CSSObject => ({
-    width: 65,
+    width: drawerWidthCollapsed,
     overflowX: 'hidden',
 });
 
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
     ({ theme }) => ({
-        width: drawerWidth,
+        width: drawerWidthExpanded,
         flexShrink: 0,
         whiteSpace: 'nowrap',
         boxSizing: 'border-box',
