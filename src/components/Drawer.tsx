@@ -8,13 +8,12 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import CloseIcon from '@mui/icons-material/Close';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
-import { Stack } from '@mui/material';
 
 const drawerWidth = 240;
 
@@ -134,7 +133,7 @@ export default function MiniDrawer() {
     return (
         <Box sx={{ display: 'flex' }}>
             <Drawer variant="permanent" open={open}>
-                <DrawerItem text="Menu" open={open} icon={<MenuIcon />} onClick={handleDrawerClose} />
+                <DrawerItem text="Menu" open={open} icon={open ? <CloseIcon /> : <MenuIcon />} onClick={handleDrawerClose} />
                 <Divider />
                 <List>
                     {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, _index) => (
