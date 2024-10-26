@@ -93,26 +93,32 @@ function Spacer() {
     )
 }
 
+function TitleBar({ title, open, toggleDrawer }: { title: string, open: boolean, toggleDrawer: any }) {
+    return (
+        <AppBar position="fixed" sx={{ backgroundColor: "black", zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+            <Toolbar>
+                <IconButton
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="menu"
+                    sx={{ mr: "12px", ml: "-14px" }}
+                    onClick={toggleDrawer}
+                >
+                    {open ? <CloseIcon /> : <MenuIcon />}
+                </IconButton>
+                <Typography variant="h6">
+                    {title}
+                </Typography>
+            </Toolbar>
+        </AppBar>
+    );
+}
+
 export default function MiniDrawer({ title, open, toggleDrawer }: { title: string, open: boolean, toggleDrawer: any }) {
     return (
         <Box sx={{ display: 'flex' }}>
-            <AppBar position="fixed" sx={{ backgroundColor: "black", zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-                <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="menu"
-                        sx={{ mr: "12px", ml: "-14px" }}
-                        onClick={toggleDrawer}
-                    >
-                        {open ? <CloseIcon /> : <MenuIcon />}
-                    </IconButton>
-                    <Typography variant="h6">
-                        {title}
-                    </Typography>
-                </Toolbar>
-            </AppBar>
+            <TitleBar title={title} open={open} toggleDrawer={toggleDrawer} />
             <Drawer variant="permanent" open={open}>
                 <Toolbar />
                 <DrawerItem text="Tables" open={open} icon={<TableChart />} onClick={() => { }} />

@@ -49,7 +49,7 @@ function App() {
   return (
     <div className="App">
       <Column>
-        <MiniDrawer title="Contact Details" open={open} toggleDrawer={toggleDrawer} />
+        <MiniDrawer title="Add New Contact" open={open} toggleDrawer={toggleDrawer} />
         <Toolbar />
         <Row>
           <Box width={open ? 225 : 50}></Box>
