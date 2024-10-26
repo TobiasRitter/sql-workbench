@@ -2,14 +2,8 @@ import { AccountCircle, Menu } from '@mui/icons-material';
 import './App.css';
 import { AppBar, BottomNavigation, BottomNavigationAction, Box, Button, FormControl, FormHelperText, Icon, IconButton, InputAdornment, OutlinedInput, Paper, Stack, TextField, Toolbar, Typography } from '@mui/material';
 import * as React from 'react';
-
-function Column({ children }: any) {
-  return (
-    <Stack spacing={2} alignItems="center">
-      {children}
-    </Stack>
-  );
-}
+import Column from './components/Column';
+import MiniDrawer from './components/Drawer';
 
 function Row({ children }: any) {
   return (
@@ -87,8 +81,8 @@ function MenuBar({ title }: { title: string }) {
 function App() {
   return (
     <div className="App">
+      <MiniDrawer />
       <Column>
-        <MenuBar title="Input" />
         <NumericInput label="Weight" unit="kg" />
         <NumericInput label="Number" />
         <PersonInput label="Contact" />
