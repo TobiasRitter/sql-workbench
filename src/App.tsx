@@ -1,6 +1,6 @@
-import { AccountCircle, Menu } from '@mui/icons-material';
+import { AccountCircle } from '@mui/icons-material';
 import './App.css';
-import { AppBar, BottomNavigation, BottomNavigationAction, Box, Button, FormControl, FormHelperText, Icon, IconButton, InputAdornment, OutlinedInput, Paper, Stack, TextField, Toolbar, Typography } from '@mui/material';
+import { AppBar, BottomNavigation, Box, Button, InputAdornment, Paper, Stack, TextField, Toolbar, Typography } from '@mui/material';
 import * as React from 'react';
 import Column from './components/Column';
 import MiniDrawer from './components/Drawer';
@@ -37,29 +37,11 @@ function PersonInput({ label }: { label: string }) {
   );
 }
 
-function BottomNav({ children }: any) {
-  const [value, setValue] = React.useState(0);
-
-  return (
-    <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={0}>
-      <BottomNavigation
-        showLabels
-        value={value}
-        onChange={(_, newValue) => {
-          setValue(newValue);
-        }}
-      >
-        {children}
-      </BottomNavigation>
-    </Paper>
-  );
-}
-
 function TitleBar({ title }: { title: string }) {
   return (
     <AppBar position="static" color="transparent" elevation={0}>
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+        <Typography variant="h3" >
           {title}
         </Typography>
       </Toolbar>
@@ -67,27 +49,30 @@ function TitleBar({ title }: { title: string }) {
   );
 }
 
-
 function App() {
+  const [open, setOpen] = React.useState(false);
+
+  const toggleDrawer = () => {
+    setOpen(!open);
+  };
+
   return (
     <div className="App">
-      <MiniDrawer />
-      <TitleBar title="Test" />
-      <Column>
-        <NumericInput label="Weight" unit="kg" />
-        <NumericInput label="Number" />
-        <PersonInput label="Contact" />
-        <Row>
-          <Button variant="contained">Text</Button>
-          <Button variant="outlined">Text</Button>
-        </Row>
-      </Column>
-      <BottomNav >
-        <BottomNavigationAction label="Recents" icon={<AccountCircle />} />
-        <BottomNavigationAction label="Favorites" icon={<AccountCircle />} />
-        <BottomNavigationAction label="Nearby" icon={<AccountCircle />} />
-      </BottomNav>
-    </div>
+      <MiniDrawer open={open} toggleDrawer={toggleDrawer} />
+      <Row>
+        <Box width={open ? 225 : 50}></Box>
+        <Column>
+          <TitleBar title="Contact Details" />
+          <NumericInput label="Weight" unit="kg" />
+          <NumericInput label="Number" />
+          <PersonInput label="Contact" />
+          <Row>
+            <Button variant="contained">Text</Button>
+            <Button variant="outlined">Text</Button>
+          </Row>
+        </Column>
+      </Row>
+    </div >
   );
 }
 
