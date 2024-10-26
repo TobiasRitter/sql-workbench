@@ -1,6 +1,6 @@
-import { AccountCircle } from '@mui/icons-material';
+import { AccountCircle, Menu } from '@mui/icons-material';
 import './App.css';
-import { BottomNavigation, BottomNavigationAction, Box, Button, FormControl, FormHelperText, InputAdornment, OutlinedInput, Paper, Stack, TextField } from '@mui/material';
+import { AppBar, BottomNavigation, BottomNavigationAction, Box, Button, FormControl, FormHelperText, Icon, IconButton, InputAdornment, OutlinedInput, Paper, Stack, TextField, Toolbar, Typography } from '@mui/material';
 import * as React from 'react';
 
 function Column({ children }: any) {
@@ -43,7 +43,7 @@ function BottomNav({ children }: any) {
   const [value, setValue] = React.useState(0);
 
   return (
-    <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}>
+    <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={0}>
       <BottomNavigation
         showLabels
         value={value}
@@ -57,11 +57,34 @@ function BottomNav({ children }: any) {
   );
 }
 
+function MenuBar({ title }: { title: string }) {
+  return (
+    <AppBar position="static" color="transparent" elevation={0}>
+      <Toolbar>
+        <IconButton
+          size="large"
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          sx={{ mr: 2 }}
+        >
+          <Menu />
+        </IconButton>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          {title}
+        </Typography>
+        <Box width={64}></Box>
+      </Toolbar>
+    </AppBar>
+  );
+}
+
 
 function App() {
   return (
     <div className="App">
       <Column>
+        <MenuBar title="Input" />
         <UnitInput label="Weight" unit="kg" />
         <PersonInput label="Contact" />
         <Row>
