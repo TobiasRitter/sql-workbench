@@ -1,8 +1,6 @@
-import * as React from 'react';
 import { styled, Theme, CSSObject } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
-import Divider from '@mui/material/Divider';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import ListItem from '@mui/material/ListItem';
@@ -16,6 +14,7 @@ import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { AppBar, IconButton, Toolbar, Typography } from '@mui/material';
+import PieChartIcon from '@mui/icons-material/PieChart';
 
 const drawerWidth = 240;
 
@@ -70,7 +69,7 @@ function DrawerItem({ text, open, icon, onClick }: { text: string, open: boolean
                         {
                             minWidth: 0,
                             justifyContent: 'center',
-                            mr: open ? 2 : "auto",
+                            mr: open ? "24px" : "auto",
                         },
                     ]}>
                     {icon}
@@ -104,7 +103,7 @@ export default function MiniDrawer({ title, open, toggleDrawer }: { title: strin
                         edge="start"
                         color="inherit"
                         aria-label="menu"
-                        sx={{ mr: "2px", ml: "-14px" }}
+                        sx={{ mr: "12px", ml: "-14px" }}
                         onClick={toggleDrawer}
                     >
                         {open ? <CloseIcon /> : <MenuIcon />}
@@ -118,6 +117,7 @@ export default function MiniDrawer({ title, open, toggleDrawer }: { title: strin
                 <Toolbar />
                 <DrawerItem text="Tables" open={open} icon={<TableChart />} onClick={() => { }} />
                 <DrawerItem text="Car Lines" open={open} icon={<DirectionsCarIcon />} onClick={() => { }} />
+                <DrawerItem text="Domains" open={open} icon={<PieChartIcon />} onClick={() => { }} />
                 <DrawerItem text="Contacts" open={open} icon={<PersonIcon />} onClick={() => { }} />
                 <DrawerItem text="Measurements" open={open} icon={<BoltIcon />} onClick={() => { }} />
                 <Spacer />

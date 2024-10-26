@@ -39,30 +39,6 @@ function PersonInput({ label }: { label: string }) {
   );
 }
 
-function TitleBar({ title, open, toggleDrawer }: { title: string, open: boolean, toggleDrawer: any }) {
-  return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" elevation={0}>
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-            onClick={toggleDrawer}
-          >
-            {open ? <CloseIcon /> : <MenuIcon />}
-          </IconButton>
-          <Typography variant="h6">
-            {title}
-          </Typography>
-        </Toolbar>
-      </AppBar>
-    </Box>
-  );
-}
-
 function App() {
   const [open, setOpen] = React.useState(false);
 
@@ -73,8 +49,8 @@ function App() {
   return (
     <div className="App">
       <Column>
-        <TitleBar title="Contact Details" open={open} toggleDrawer={toggleDrawer} />
         <MiniDrawer title="Contact Details" open={open} toggleDrawer={toggleDrawer} />
+        <Toolbar />
         <Row>
           <Box width={open ? 225 : 50}></Box>
           <Column>
