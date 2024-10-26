@@ -14,6 +14,7 @@ import AssistantIcon from '@mui/icons-material/Assistant';
 import BoltIcon from '@mui/icons-material/Bolt';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import PersonIcon from '@mui/icons-material/Person';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const drawerWidth = 240;
 
@@ -147,7 +148,9 @@ export default function MiniDrawer() {
                 <DrawerItem text="Car Lines" open={open} icon={<DirectionsCarIcon />} onClick={() => { }} />
                 <DrawerItem text="Contacts" open={open} icon={<PersonIcon />} onClick={() => { }} />
                 <DrawerItem text="Measurements" open={open} icon={<BoltIcon />} onClick={() => { }} />
+                <Box sx={{ flexGrow: 1 }} />
                 <DrawerItem text="Assistant" open={open} icon={<AssistantIcon />} onClick={() => { }} />
+                <DrawerItem text="Settings" open={open} icon={<SettingsIcon />} onClick={() => { }} />
             </Drawer>
         </Box >
     );
