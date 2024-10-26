@@ -18,7 +18,7 @@ import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
-export const drawerWidthExpanded = 240;
+export const drawerWidthExpanded = 210;
 export const drawerWidthCollapsed = 65;
 
 const openedMixin = (theme: Theme): CSSObject => ({
