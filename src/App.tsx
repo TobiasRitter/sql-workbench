@@ -74,7 +74,7 @@ function App() {
     <div className="App">
       <Column>
         <TitleBar title="Contact Details" open={open} toggleDrawer={toggleDrawer} />
-        <MiniDrawer open={open} toggleDrawer={toggleDrawer} />
+        <MiniDrawer title="Contact Details" open={open} toggleDrawer={toggleDrawer} />
         <Row>
           <Box width={open ? 225 : 50}></Box>
           <Column>

@@ -15,7 +15,7 @@ import BoltIcon from '@mui/icons-material/Bolt';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { Typography } from '@mui/material';
+import { AppBar, IconButton, Toolbar, Typography } from '@mui/material';
 
 const drawerWidth = 240;
 
@@ -94,13 +94,28 @@ function Spacer() {
     )
 }
 
-export default function MiniDrawer({ open, toggleDrawer }: { open: boolean, toggleDrawer: any }) {
+export default function MiniDrawer({ title, open, toggleDrawer }: { title: string, open: boolean, toggleDrawer: any }) {
     return (
         <Box sx={{ display: 'flex' }}>
-            <Drawer variant="permanent" open={open} sx={{
-                '&.MuiDrawer-root .MuiDrawer-paper': { marginTop: '65px' },
-            }}
-            >
+            <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+                <Toolbar>
+                    <IconButton
+                        size="large"
+                        edge="start"
+                        color="inherit"
+                        aria-label="menu"
+                        sx={{ mr: "2px", ml: "-14px" }}
+                        onClick={toggleDrawer}
+                    >
+                        {open ? <CloseIcon /> : <MenuIcon />}
+                    </IconButton>
+                    <Typography variant="h6">
+                        {title}
+                    </Typography>
+                </Toolbar>
+            </AppBar>
+            <Drawer variant="permanent" open={open}>
+                <Toolbar />
                 <DrawerItem text="Tables" open={open} icon={<TableChart />} onClick={() => { }} />
                 <DrawerItem text="Car Lines" open={open} icon={<DirectionsCarIcon />} onClick={() => { }} />
                 <DrawerItem text="Contacts" open={open} icon={<PersonIcon />} onClick={() => { }} />
