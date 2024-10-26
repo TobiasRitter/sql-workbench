@@ -72,10 +72,10 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     }),
 );
 
-function DrawerItem({ text, open }: { text: string, open: boolean }) {
+function DrawerItem({ text, open, icon, onClick }: { text: string, open: boolean, icon: any, onClick: any }) {
     return (
         <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton
+            <ListItemButton onClick={onClick}
                 sx={[
                     {
                         minHeight: 48,
@@ -105,7 +105,7 @@ function DrawerItem({ text, open }: { text: string, open: boolean }) {
                             },
                     ]}
                 >
-                    <InboxIcon />
+                    {icon}
                 </ListItemIcon>
                 <ListItemText
                     primary={text}
@@ -134,16 +134,11 @@ export default function MiniDrawer() {
     return (
         <Box sx={{ display: 'flex' }}>
             <Drawer variant="permanent" open={open}>
-                <Stack direction="row" alignItems="center" justifyContent="space-between">
-                    {open ? "Menu" : ""}
-                    <IconButton onClick={handleDrawerClose} sx={[{ px: 2.5, py: 2.5 }]}>
-                        {open ? <ChevronLeftIcon /> : <MenuIcon />}
-                    </IconButton>
-                </Stack>
+                <DrawerItem text="Menu" open={open} icon={<MenuIcon />} onClick={handleDrawerClose} />
                 <Divider />
                 <List>
                     {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, _index) => (
-                        DrawerItem({ text, open })
+                        DrawerItem({ text, open, icon: <InboxIcon />, onClick: handleDrawerClose })
                     ))}
                 </List>
             </Drawer>
