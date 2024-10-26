@@ -19,7 +19,11 @@ function Row({ children }: any) {
   );
 }
 
-function UnitInput({ label, unit }: { label: string, unit: string }) {
+function NumericInput({ label, unit }: { label: string, unit?: string }) {
+  if (!unit) {
+    unit = "";
+  }
+
   return (
     <TextField label={label} type="number" slotProps={{
       input: {
@@ -85,7 +89,8 @@ function App() {
     <div className="App">
       <Column>
         <MenuBar title="Input" />
-        <UnitInput label="Weight" unit="kg" />
+        <NumericInput label="Weight" unit="kg" />
+        <NumericInput label="Number" />
         <PersonInput label="Contact" />
         <Row>
           <Button variant="contained">Text</Button>
