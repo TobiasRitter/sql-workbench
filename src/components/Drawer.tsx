@@ -2,9 +2,6 @@ import * as React from 'react';
 import { styled, Theme, CSSObject } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
-import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
@@ -12,7 +9,11 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
+import TableChart from '@mui/icons-material/TableChart';
+import AssistantIcon from '@mui/icons-material/Assistant';
+import BoltIcon from '@mui/icons-material/Bolt';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import PersonIcon from '@mui/icons-material/Person';
 
 const drawerWidth = 240;
 
@@ -96,6 +97,40 @@ function DrawerItem({ text, open, icon, onClick }: { text: string, open: boolean
     )
 }
 
+function DrawerHeader({ text, open, onClick }: { text: string, open: boolean, onClick: any }) {
+    return (
+        <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+            <ListItemButton onClick={onClick}
+                sx={[
+                    {
+                        minHeight: 48,
+                        px: 2.5,
+                        justifyContent: open ? "initial" : "center",
+                    }
+                ]}>
+                <ListItemIcon
+                    sx={[
+                        {
+                            minWidth: 0,
+                            justifyContent: 'center',
+                            mr: open ? 2 : "auto",
+                        },
+                    ]}>
+                    {open ? <CloseIcon /> : <MenuIcon />}
+                </ListItemIcon>
+                <ListItemText
+                    primary={text}
+                    sx={[
+                        {
+                            opacity: open ? 1 : 0,
+                        },
+                    ]}
+                />
+            </ListItemButton>
+        </ListItem>
+    )
+}
+
 export default function MiniDrawer() {
     const [open, setOpen] = React.useState(false);
 
@@ -106,13 +141,13 @@ export default function MiniDrawer() {
     return (
         <Box sx={{ display: 'flex' }}>
             <Drawer variant="permanent" open={open}>
-                <DrawerItem text="Menu" open={open} icon={open ? <CloseIcon /> : <MenuIcon />} onClick={toggleDrawer} />
+                <DrawerHeader text="Menu" open={open} onClick={toggleDrawer} />
                 <Divider />
-                <List>
-                    {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, _index) => (
-                        DrawerItem({ text, open, icon: <InboxIcon />, onClick: toggleDrawer })
-                    ))}
-                </List>
+                <DrawerItem text="Tables" open={open} icon={<TableChart />} onClick={() => { }} />
+                <DrawerItem text="Car Lines" open={open} icon={<DirectionsCarIcon />} onClick={() => { }} />
+                <DrawerItem text="Contacts" open={open} icon={<PersonIcon />} onClick={() => { }} />
+                <DrawerItem text="Measurements" open={open} icon={<BoltIcon />} onClick={() => { }} />
+                <DrawerItem text="Assistant" open={open} icon={<AssistantIcon />} onClick={() => { }} />
             </Drawer>
         </Box >
     );
