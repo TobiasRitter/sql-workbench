@@ -129,6 +129,7 @@ export default function MiniDrawer({ title, open, toggleDrawer }: { title: strin
             <TitleBar title={title} open={open} toggleDrawer={toggleDrawer} />
             <Drawer variant="permanent" open={open}>
                 <Toolbar />
+                <Box height={16} />
                 <DrawerItem text="Tables" open={open} icon={<TableChart />} onClick={() => { }} />
                 <DrawerItem text="Car Lines" open={open} icon={<DirectionsCarIcon />} onClick={() => { }} />
                 <DrawerItem text="Domains" open={open} icon={<PieChartIcon />} onClick={() => { }} />
@@ -136,6 +137,7 @@ export default function MiniDrawer({ title, open, toggleDrawer }: { title: strin
                 <DrawerItem text="Measurements" open={open} icon={<BoltIcon />} onClick={() => { }} />
                 <Spacer />
                 <DrawerItem text="Assistant" open={open} icon={<AssistantIcon />} onClick={() => { }} />
+                <Box height={16} />
             </Drawer>
         </Box >
     );
