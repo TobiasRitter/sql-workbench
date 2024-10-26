@@ -1,3 +1,4 @@
+import { AccountCircle } from '@mui/icons-material';
 import './App.css';
 import { Button, FormControl, FormHelperText, InputAdornment, OutlinedInput, Stack, TextField } from '@mui/material';
 
@@ -27,12 +28,23 @@ function UnitInput({ label, unit }: { label: string, unit: string }) {
   );
 }
 
+function PersonInput({ label }: { label: string }) {
+  return (
+    <TextField label={label} slotProps={{
+      input: {
+        startAdornment: <InputAdornment position="start"> <AccountCircle /></InputAdornment>,
+      },
+    }}></TextField>
+  );
+}
+
 
 function App() {
   return (
     <div className="App">
       <Column>
         <UnitInput label="Weight" unit="kg" />
+        <PersonInput label="Contact" />
         <Row>
           <Button variant="contained">Text</Button>
           <Button variant="outlined">Text</Button>
