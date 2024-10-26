@@ -20,7 +20,7 @@ function Row({ children }: any) {
 
 function UnitInput({ label, unit }: { label: string, unit: string }) {
   return (
-    <TextField label={label} slotProps={{
+    <TextField label={label} type="number" slotProps={{
       input: {
         endAdornment: <InputAdornment position="end">{unit}</InputAdornment>,
       },
@@ -32,7 +32,7 @@ function PersonInput({ label }: { label: string }) {
   return (
     <TextField label={label} slotProps={{
       input: {
-        startAdornment: <InputAdornment position="start"> <AccountCircle /></InputAdornment>,
+        endAdornment: <InputAdornment position="end"> <AccountCircle /></InputAdornment>,
       },
     }}></TextField>
   );
