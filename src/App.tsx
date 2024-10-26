@@ -1,24 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { Button, FormControl, FormHelperText, InputAdornment, OutlinedInput, Stack, TextField } from '@mui/material';
+
+function Column({ children }: any) {
+  return (
+    <Stack spacing={2} alignItems="center">
+      {children}
+    </Stack>
+  );
+}
+
+function Row({ children }: any) {
+  return (
+    <Stack spacing={2} direction="row">
+      {children}
+    </Stack>
+  );
+}
+
+function UnitInput({ label, unit }: { label: string, unit: string }) {
+  return (
+    <TextField label={label} slotProps={{
+      input: {
+        endAdornment: <InputAdornment position="end">{unit}</InputAdornment>,
+      },
+    }}></TextField>
+  );
+}
+
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Column>
+        <UnitInput label="Weight" unit="kg" />
+        <Row>
+          <Button variant="contained">Text</Button>
+          <Button variant="outlined">Text</Button>
+        </Row>
+      </Column>
     </div>
   );
 }
