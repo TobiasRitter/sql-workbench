@@ -15,6 +15,7 @@ import BoltIcon from '@mui/icons-material/Bolt';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { Typography } from '@mui/material';
 
 const drawerWidth = 240;
 
@@ -119,14 +120,9 @@ function DrawerHeader({ text, open, onClick }: { text: string, open: boolean, on
                     ]}>
                     {open ? <CloseIcon /> : <MenuIcon />}
                 </ListItemIcon>
-                <ListItemText
-                    primary={text}
-                    sx={[
-                        {
-                            opacity: open ? 1 : 0,
-                        },
-                    ]}
-                />
+                {open ? <Typography variant="h6" >
+                    {text}
+                </Typography> : ""}
             </ListItemButton>
         </ListItem>
     )
