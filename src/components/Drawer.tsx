@@ -132,6 +132,12 @@ function DrawerHeader({ text, open, onClick }: { text: string, open: boolean, on
     )
 }
 
+function Spacer() {
+    return (
+        <Box sx={{ flexGrow: 1 }} />
+    )
+}
+
 export default function MiniDrawer() {
     const [open, setOpen] = React.useState(false);
 
@@ -148,7 +154,7 @@ export default function MiniDrawer() {
                 <DrawerItem text="Car Lines" open={open} icon={<DirectionsCarIcon />} onClick={() => { }} />
                 <DrawerItem text="Contacts" open={open} icon={<PersonIcon />} onClick={() => { }} />
                 <DrawerItem text="Measurements" open={open} icon={<BoltIcon />} onClick={() => { }} />
-                <Box sx={{ flexGrow: 1 }} />
+                <Spacer />
                 <DrawerItem text="Assistant" open={open} icon={<AssistantIcon />} onClick={() => { }} />
                 <DrawerItem text="Settings" open={open} icon={<SettingsIcon />} onClick={() => { }} />
             </Drawer>
