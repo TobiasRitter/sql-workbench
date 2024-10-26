@@ -1,8 +1,6 @@
 import { styled, Theme, CSSObject } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
-import MenuIcon from '@mui/icons-material/Menu';
-import CloseIcon from '@mui/icons-material/Close';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -17,6 +15,8 @@ import { AppBar, IconButton, Toolbar, Typography } from '@mui/material';
 import PieChartIcon from '@mui/icons-material/PieChart';
 import StorageIcon from '@mui/icons-material/Storage';
 import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 const drawerWidth = 240;
 
@@ -107,7 +107,7 @@ function TitleBar({ title, open, toggleDrawer }: { title: string, open: boolean,
                     sx={{ mr: "12px", ml: "-14px" }}
                     onClick={toggleDrawer}
                 >
-                    {open ? <CloseIcon /> : <MenuIcon />}
+                    {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
                 </IconButton>
                 <Typography variant="h6">
                     {title}
