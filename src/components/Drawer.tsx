@@ -15,6 +15,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { AppBar, IconButton, Toolbar, Typography } from '@mui/material';
 import PieChartIcon from '@mui/icons-material/PieChart';
+import StorageIcon from '@mui/icons-material/Storage';
+import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
 
 const drawerWidth = 240;
 
@@ -110,6 +112,11 @@ function TitleBar({ title, open, toggleDrawer }: { title: string, open: boolean,
                 <Typography variant="h6">
                     {title}
                 </Typography>
+                <Spacer />
+                <StorageIcon sx={{ mr: "12px" }} />
+                my-sql-db
+                <SignalCellularAltIcon sx={{ mr: "12px", ml: "24px" }} />
+                Connected
             </Toolbar>
         </AppBar>
     );
