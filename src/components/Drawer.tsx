@@ -88,35 +88,6 @@ function DrawerItem({ text, open, icon, onClick }: { text: string, open: boolean
     )
 }
 
-function DrawerHeader({ text, open, onClick }: { text: string, open: boolean, onClick: any }) {
-    return (
-        <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton onClick={onClick}
-                sx={[
-                    {
-                        minHeight: 48,
-                        px: 2.5,
-                        justifyContent: open ? "initial" : "center",
-                    }
-                ]}>
-                <ListItemIcon
-                    sx={[
-                        {
-                            minWidth: 0,
-                            justifyContent: 'center',
-                            mr: open ? 2 : "auto",
-                        },
-                    ]}>
-                    {open ? <CloseIcon /> : <MenuIcon />}
-                </ListItemIcon>
-                {open ? <Typography variant="h6" >
-                    {text}
-                </Typography> : ""}
-            </ListItemButton>
-        </ListItem>
-    )
-}
-
 function Spacer() {
     return (
         <Box sx={{ flexGrow: 1 }} />
@@ -126,9 +97,10 @@ function Spacer() {
 export default function MiniDrawer({ open, toggleDrawer }: { open: boolean, toggleDrawer: any }) {
     return (
         <Box sx={{ display: 'flex' }}>
-            <Drawer variant="permanent" open={open}>
-                <DrawerHeader text="Menu" open={open} onClick={toggleDrawer} />
-                <Divider />
+            <Drawer variant="permanent" open={open} sx={{
+                '&.MuiDrawer-root .MuiDrawer-paper': { marginTop: '65px' },
+            }}
+            >
                 <DrawerItem text="Tables" open={open} icon={<TableChart />} onClick={() => { }} />
                 <DrawerItem text="Car Lines" open={open} icon={<DirectionsCarIcon />} onClick={() => { }} />
                 <DrawerItem text="Contacts" open={open} icon={<PersonIcon />} onClick={() => { }} />

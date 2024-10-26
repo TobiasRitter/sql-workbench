@@ -1,9 +1,11 @@
 import { AccountCircle } from '@mui/icons-material';
 import './App.css';
-import { AppBar, BottomNavigation, Box, Button, InputAdornment, Paper, Stack, TextField, Toolbar, Typography } from '@mui/material';
+import { AppBar, BottomNavigation, Box, Button, IconButton, InputAdornment, Paper, Stack, TextField, Toolbar, Typography } from '@mui/material';
 import * as React from 'react';
 import Column from './components/Column';
 import MiniDrawer from './components/Drawer';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 
 function Row({ children }: any) {
   return (
@@ -37,15 +39,27 @@ function PersonInput({ label }: { label: string }) {
   );
 }
 
-function TitleBar({ title }: { title: string }) {
+function TitleBar({ title, open, toggleDrawer }: { title: string, open: boolean, toggleDrawer: any }) {
   return (
-    <AppBar position="static" color="transparent" elevation={0}>
-      <Toolbar>
-        <Typography variant="h3" >
-          {title}
-        </Typography>
-      </Toolbar>
-    </AppBar>
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="static" elevation={0}>
+        <Toolbar>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ mr: 2 }}
+            onClick={toggleDrawer}
+          >
+            {open ? <CloseIcon /> : <MenuIcon />}
+          </IconButton>
+          <Typography variant="h6">
+            {title}
+          </Typography>
+        </Toolbar>
+      </AppBar>
+    </Box>
   );
 }
 
@@ -58,20 +72,22 @@ function App() {
 
   return (
     <div className="App">
-      <MiniDrawer open={open} toggleDrawer={toggleDrawer} />
-      <Row>
-        <Box width={open ? 225 : 50}></Box>
-        <Column>
-          <TitleBar title="Contact Details" />
-          <NumericInput label="Weight" unit="kg" />
-          <NumericInput label="Number" />
-          <PersonInput label="Contact" />
-          <Row>
-            <Button variant="contained">Text</Button>
-            <Button variant="outlined">Text</Button>
-          </Row>
-        </Column>
-      </Row>
+      <Column>
+        <TitleBar title="Contact Details" open={open} toggleDrawer={toggleDrawer} />
+        <MiniDrawer open={open} toggleDrawer={toggleDrawer} />
+        <Row>
+          <Box width={open ? 225 : 50}></Box>
+          <Column>
+            <NumericInput label="Weight" unit="kg" />
+            <NumericInput label="Number" />
+            <PersonInput label="Contact" />
+            <Row>
+              <Button variant="contained">Text</Button>
+              <Button variant="outlined">Text</Button>
+            </Row>
+          </Column>
+        </Row>
+      </Column>
     </div >
   );
 }
