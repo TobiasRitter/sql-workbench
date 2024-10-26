@@ -113,10 +113,11 @@ function TitleBar({ title, open, toggleDrawer }: { title: string, open: boolean,
                     {title}
                 </Typography>
                 <Spacer />
-                <StorageIcon sx={{ mr: "12px" }} />
+                <StorageIcon sx={{ mr: "8px" }} />
                 my-sql-db
-                <SignalCellularAltIcon sx={{ mr: "12px", ml: "24px" }} />
+                <SignalCellularAltIcon sx={{ mr: "8px", ml: "24px" }} />
                 Connected
+                <SettingsIcon sx={{ ml: "64px" }} />
             </Toolbar>
         </AppBar>
     );
@@ -135,7 +136,6 @@ export default function MiniDrawer({ title, open, toggleDrawer }: { title: strin
                 <DrawerItem text="Measurements" open={open} icon={<BoltIcon />} onClick={() => { }} />
                 <Spacer />
                 <DrawerItem text="Assistant" open={open} icon={<AssistantIcon />} onClick={() => { }} />
-                <DrawerItem text="Settings" open={open} icon={<SettingsIcon />} onClick={() => { }} />
             </Drawer>
         </Box >
     );
