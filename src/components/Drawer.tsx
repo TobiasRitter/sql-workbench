@@ -72,6 +72,58 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     }),
 );
 
+function DrawerItem({ text, open }: { text: string, open: boolean }) {
+    return (
+        <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+            <ListItemButton
+                sx={[
+                    {
+                        minHeight: 48,
+                        px: 2.5,
+                    },
+                    open
+                        ? {
+                            justifyContent: 'initial',
+                        }
+                        : {
+                            justifyContent: 'center',
+                        },
+                ]}
+            >
+                <ListItemIcon
+                    sx={[
+                        {
+                            minWidth: 0,
+                            justifyContent: 'center',
+                        },
+                        open
+                            ? {
+                                mr: 2,
+                            }
+                            : {
+                                mr: 'auto',
+                            },
+                    ]}
+                >
+                    <InboxIcon />
+                </ListItemIcon>
+                <ListItemText
+                    primary={text}
+                    sx={[
+                        open
+                            ? {
+                                opacity: 1,
+                            }
+                            : {
+                                opacity: 0,
+                            },
+                    ]}
+                />
+            </ListItemButton>
+        </ListItem>
+    )
+}
+
 export default function MiniDrawer() {
     const [open, setOpen] = React.useState(false);
 
@@ -90,54 +142,8 @@ export default function MiniDrawer() {
                 </Stack>
                 <Divider />
                 <List>
-                    {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                        <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-                            <ListItemButton
-                                sx={[
-                                    {
-                                        minHeight: 48,
-                                        px: 2.5,
-                                    },
-                                    open
-                                        ? {
-                                            justifyContent: 'initial',
-                                        }
-                                        : {
-                                            justifyContent: 'center',
-                                        },
-                                ]}
-                            >
-                                <ListItemIcon
-                                    sx={[
-                                        {
-                                            minWidth: 0,
-                                            justifyContent: 'center',
-                                        },
-                                        open
-                                            ? {
-                                                mr: 2,
-                                            }
-                                            : {
-                                                mr: 'auto',
-                                            },
-                                    ]}
-                                >
-                                    <InboxIcon />
-                                </ListItemIcon>
-                                <ListItemText
-                                    primary={text}
-                                    sx={[
-                                        open
-                                            ? {
-                                                opacity: 1,
-                                            }
-                                            : {
-                                                opacity: 0,
-                                            },
-                                    ]}
-                                />
-                            </ListItemButton>
-                        </ListItem>
+                    {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, _index) => (
+                        DrawerItem({ text, open })
                     ))}
                 </List>
             </Drawer>
