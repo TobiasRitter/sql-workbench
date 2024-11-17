@@ -11,11 +11,8 @@ class Hero(SQLModel, table=True):
 
 def get_session():
     engine = create_engine(DATABASE_URL)
-    session = Session(engine)
-    try:
+    with Session(engine) as session:
         yield session
-    finally:
-        session.close()
 
 
 app = FastAPI()
