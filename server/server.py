@@ -1,12 +1,38 @@
-from flask import Flask
+from fastapi import Depends, FastAPI
+from sqlmodel import SQLModel, Field, create_engine, Session, select
 
-app = Flask(__name__)
-
-
-@app.route("/message")
-def hello():
-    return {"message": "Hello, World!"}
+DATABASE_URL = "sqlite:///database.db"
+engine = create_engine(DATABASE_URL)
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
+class Hero(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    name: str
+
+
+def get_session():
+    session = Session(engine)
+    try:
+        yield session
+    finally:
+        session.close()
+
+
+app = FastAPI()
+
+
+@app.get("/heroes")
+def hello(db: Session = Depends(get_session)) -> list[Hero]:
+    return list(db.exec(select(Hero)).all())
+
+
+@app.get("/reset")
+def reset(db: Session = Depends(get_session)) -> dict[str, str]:
+    SQLModel.metadata.drop_all(engine)
+    SQLModel.metadata.create_all(engine)
+    db.add(Hero(name="Deadpool"))
+    db.add(Hero(name="Spiderman"))
+    db.add(Hero(name="Ironman"))
+    db.add(Hero(name="Thor"))
+    db.commit()
+    return {"message": "Database reset!"}
