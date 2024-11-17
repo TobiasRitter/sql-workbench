@@ -1,3 +1,4 @@
+from typing import Callable, Generator
 from fastapi import Depends, FastAPI
 from sqlmodel import SQLModel, Field, create_engine, Session, select
 
@@ -9,7 +10,7 @@ class Hero(SQLModel, table=True):
     name: str
 
 
-def get_session():
+def get_session(token: str) -> Generator[Session, None, None]:
     engine = create_engine(DATABASE_URL)
     with Session(engine) as session:
         yield session
