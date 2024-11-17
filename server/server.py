@@ -1,8 +1,6 @@
-from typing import Callable, Generator
+from typing import Generator
 from fastapi import Depends, FastAPI
 from sqlmodel import SQLModel, Field, create_engine, Session, select
-
-DATABASE_URL = "sqlite:///database.db"
 
 
 class Hero(SQLModel, table=True):
@@ -11,12 +9,17 @@ class Hero(SQLModel, table=True):
 
 
 def get_session(token: str) -> Generator[Session, None, None]:
-    engine = create_engine(DATABASE_URL)
+    engine = create_engine("sqlite:///database.db")
     with Session(engine) as session:
         yield session
 
 
 app = FastAPI()
+
+
+@app.get("/")
+def hello() -> str:
+    return "Server is running."
 
 
 @app.get("/heroes")
@@ -32,7 +35,7 @@ def hello(name: str, db: Session = Depends(get_session)) -> list[Hero]:
 
 
 @app.get("/reset")
-def reset(db: Session = Depends(get_session)) -> dict[str, str]:
+def reset(db: Session = Depends(get_session)) -> str:
     SQLModel.metadata.drop_all(db.bind)
     SQLModel.metadata.create_all(db.bind)
     db.add(Hero(name="Deadpool"))
@@ -40,4 +43,4 @@ def reset(db: Session = Depends(get_session)) -> dict[str, str]:
     db.add(Hero(name="Ironman"))
     db.add(Hero(name="Thor"))
     db.commit()
-    return {"message": "Database reset!"}
+    return "Database reset."
