@@ -1,6 +1,13 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 
+type Option = {
+  id: number;
+  name: string;
+}
+
+const opt = { id: 1, name: "test", age: 25 } as Option;
+
 function App() {
   const [data, setData] = useState<any>([{}]);
 
