@@ -24,6 +24,13 @@ def hello(db: Session = Depends(get_session)) -> list[Hero]:
     return list(db.exec(select(Hero)).all())
 
 
+@app.get("/hero")
+def hello(name: str, db: Session = Depends(get_session)) -> list[Hero]:
+    db.add(Hero(name=name))
+    db.commit()
+    return list(db.exec(select(Hero)).all())
+
+
 @app.get("/reset")
 def reset(db: Session = Depends(get_session)) -> dict[str, str]:
     SQLModel.metadata.drop_all(db.bind)
