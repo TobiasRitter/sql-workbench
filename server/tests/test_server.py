@@ -8,11 +8,7 @@ client = TestClient(app)
 
 
 def get_test_session(token: str) -> Generator[Session, None, None]:
-    engine = create_engine(
-        "sqlite:///:memory:",
-        connect_args={"check_same_thread": False},
-        poolclass=StaticPool,
-    )
+    engine = create_engine("sqlite:///test_database.db")
     with Session(engine) as session:
         yield session
 
@@ -27,6 +23,15 @@ def test_root():
 
 
 def test_reset():
-    response = client.get("/reset?token=abc")
-    assert response.status_code == 200
-    assert response.json() == "Database reset."
+    response1 = client.get("/reset?token=abc")
+    assert response1.status_code == 200
+    assert response1.json() == "Database reset."
+
+    response2 = client.get("/heroes?token=abc")
+    assert response2.status_code == 200
+    assert response2.json() == [
+        {"id": 1, "name": "Deadpool"},
+        {"id": 2, "name": "Spiderman"},
+        {"id": 3, "name": "Ironman"},
+        {"id": 4, "name": "Thor"},
+    ]
