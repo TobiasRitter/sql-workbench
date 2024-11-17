@@ -2,7 +2,6 @@ from fastapi import Depends, FastAPI
 from sqlmodel import SQLModel, Field, create_engine, Session, select
 
 DATABASE_URL = "sqlite:///database.db"
-engine = create_engine(DATABASE_URL)
 
 
 class Hero(SQLModel, table=True):
@@ -11,6 +10,7 @@ class Hero(SQLModel, table=True):
 
 
 def get_session():
+    engine = create_engine(DATABASE_URL)
     session = Session(engine)
     try:
         yield session
@@ -28,8 +28,8 @@ def hello(db: Session = Depends(get_session)) -> list[Hero]:
 
 @app.get("/reset")
 def reset(db: Session = Depends(get_session)) -> dict[str, str]:
-    SQLModel.metadata.drop_all(engine)
-    SQLModel.metadata.create_all(engine)
+    SQLModel.metadata.drop_all(db.bind)
+    SQLModel.metadata.create_all(db.bind)
     db.add(Hero(name="Deadpool"))
     db.add(Hero(name="Spiderman"))
     db.add(Hero(name="Ironman"))
