@@ -22,16 +22,17 @@ def hello() -> str:
     return "Server is running."
 
 
-@app.get("/heroes")
+@app.get("/hero")
 def hello(db: Session = Depends(get_session)) -> list[Hero]:
     return list(db.exec(select(Hero)).all())
 
 
-@app.get("/hero")
-def hello(name: str, db: Session = Depends(get_session)) -> list[Hero]:
-    db.add(Hero(name=name))
+@app.put("/hero")
+def hello(hero: Hero, db: Session = Depends(get_session)) -> Hero:
+    db.add(hero)
     db.commit()
-    return list(db.exec(select(Hero)).all())
+    db.refresh(hero)
+    return hero
 
 
 @app.get("/reset")

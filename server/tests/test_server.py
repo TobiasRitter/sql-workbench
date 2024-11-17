@@ -23,15 +23,32 @@ def test_root():
 
 
 def test_reset():
-    response1 = client.get("/reset?token=abc")
-    assert response1.status_code == 200
-    assert response1.json() == "Database reset."
+    response = client.get("/reset?token=abc")
+    assert response.status_code == 200
+    assert response.json() == "Database reset."
 
-    response2 = client.get("/heroes?token=abc")
-    assert response2.status_code == 200
-    assert response2.json() == [
+    response = client.get("/hero?token=abc")
+    assert response.status_code == 200
+    assert response.json() == [
         {"id": 1, "name": "Deadpool"},
         {"id": 2, "name": "Spiderman"},
         {"id": 3, "name": "Ironman"},
         {"id": 4, "name": "Thor"},
+    ]
+
+
+def test_add_hero():
+    client.get("/reset?token=abc")
+    response = client.put("/hero?token=abc", json={"name": "Hulk"})
+    assert response.status_code == 200
+    assert response.json() == {"id": 5, "name": "Hulk"}
+
+    response = client.get("/hero?token=abc")
+    assert response.status_code == 200
+    assert response.json() == [
+        {"id": 1, "name": "Deadpool"},
+        {"id": 2, "name": "Spiderman"},
+        {"id": 3, "name": "Ironman"},
+        {"id": 4, "name": "Thor"},
+        {"id": 5, "name": "Hulk"},
     ]
