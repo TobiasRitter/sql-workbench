@@ -17,7 +17,7 @@ def get_session(token: str) -> Generator[Session, None, None]:
 app = FastAPI()
 
 
-@app.get("/")
+@app.get("/api")
 def hello() -> str:
     return "Server is running."
 
