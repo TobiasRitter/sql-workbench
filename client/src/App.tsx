@@ -1,18 +1,11 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 
-type Option = {
-  id: number;
-  name: string;
-}
-
-const opt = { id: 1, name: "test", age: 25 } as Option;
-
 function App() {
   const [data, setData] = useState<string>("");
 
   useEffect(() => {
-    fetch('/api').then(res => res.json()).then(data => {
+    fetch('http://localhost:8000/api').then(res => res.json()).then(data => {
       console.log(data);
       setData(data);
     });
