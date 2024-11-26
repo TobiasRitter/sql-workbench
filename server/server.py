@@ -1,7 +1,9 @@
 from typing import Generator
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, Request
 from sqlmodel import SQLModel, Field, create_engine, Session, select
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 
 class Hero(SQLModel, table=True):
@@ -16,15 +18,12 @@ def get_session(token: str) -> Generator[Session, None, None]:
 
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="./client/build/static"), name="static")
+templates = Jinja2Templates(directory="./client/build")
 
-origins = [
-    "http://localhost:3000",
-    "https://localhost:3000",
-    "localhost:3000",
-]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -59,3 +58,8 @@ def reset(db: Session = Depends(get_session)) -> str:
     db.add(Hero(name="Thor"))
     db.commit()
     return "Database reset."
+
+
+@app.get("/{rest_of_path:path}")
+async def react_app(req: Request, rest_of_path: str):
+    return templates.TemplateResponse("index.html", {"request": req})
