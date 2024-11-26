@@ -35,12 +35,12 @@ def hello() -> str:
     return "Server is running."
 
 
-@app.get("/hero")
+@app.get("/api/hero")
 def hello(db: Session = Depends(get_session)) -> list[Hero]:
     return list(db.exec(select(Hero)).all())
 
 
-@app.put("/hero")
+@app.put("/api/hero")
 def hello(hero: Hero, db: Session = Depends(get_session)) -> Hero:
     db.add(hero)
     db.commit()
@@ -48,7 +48,7 @@ def hello(hero: Hero, db: Session = Depends(get_session)) -> Hero:
     return hero
 
 
-@app.get("/reset")
+@app.get("/api/reset")
 def reset(db: Session = Depends(get_session)) -> str:
     SQLModel.metadata.drop_all(db.bind)
     SQLModel.metadata.create_all(db.bind)
