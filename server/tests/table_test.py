@@ -29,6 +29,7 @@ def main() -> None:
             select(Product.name, Price.price)
             .join(Price)
             .where(Product.id == Price.product_id)
+            .group_by(Product.name)
         )
         products = db.exec(statement)
         for product, price in products:
