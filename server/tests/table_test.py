@@ -27,14 +27,14 @@ def main() -> None:
         db.commit()
 
         statement = (
-            select(Product.name, func.max(Price.price))
+            select(Product.name, func.max(Price.price), Price.id)
             .join(Price)
             .where(Product.id == Price.product_id)
             .group_by(Product.name)
         )
         products = db.exec(statement)
-        for product, price in products:
-            print(product, price)
+        for product in products:
+            print(*product)
 
 
 if __name__ == "__main__":
