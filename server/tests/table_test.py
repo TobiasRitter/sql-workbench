@@ -1,3 +1,4 @@
+from sqlalchemy import func
 from sqlmodel import Field, SQLModel, create_engine, Session, select
 
 
@@ -26,7 +27,7 @@ def main() -> None:
         db.commit()
 
         statement = (
-            select(Product.name, Price.price)
+            select(Product.name, func.max(Price.price))
             .join(Price)
             .where(Product.id == Price.product_id)
             .group_by(Product.name)
