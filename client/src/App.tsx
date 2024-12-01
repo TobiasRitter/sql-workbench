@@ -1,14 +1,18 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import { fetchApi, increment, State } from './State';
+import { increment, State } from './State';
 
 const initialState: State = { data: "", count: 0 };
+
+export async function myget(url: string): Promise<any> {
+  return await fetch(url).then(res => res.json())
+}
 
 function App() {
   const [state, setState] = useState<State>(initialState);
 
   useEffect(() => {
-    fetchApi().then(data => setState(prev => ({ ...prev, data })));
+    myget("/api").then(data => setState(prev => ({ ...prev, data })));
   }, []);
 
   return (
