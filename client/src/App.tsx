@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 
 type State = {
@@ -21,7 +21,9 @@ function increment(state: State): State {
 function App() {
   const [state, setState] = useState<State>(initialState);
 
-  // fetchApi(state).then(newState => { setState(newState) });
+  useEffect(() => {
+    fetchApi(state).then(newState => { setState(newState) });
+  }, []);
 
   return (
     <div className="App">
