@@ -3,7 +3,7 @@ export type State = {
     count: number;
 }
 
-export function update(state: State, data: string): State {
+export function updateData(state: State, data: string): State {
     return { ...state, data };
 }
 
