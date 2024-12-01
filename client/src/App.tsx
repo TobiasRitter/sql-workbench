@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import { increment, State } from './State';
+import { increment, State, update } from './State';
 
 const initialState: State = { data: "", count: 0 };
 
@@ -12,7 +12,7 @@ function App() {
   const [state, setState] = useState<State>(initialState);
 
   useEffect(() => {
-    myget("/api", data => setState(prev => ({ ...prev, data })));
+    myget("/api", data => setState(prev => update(prev, data)));
   }, []);
 
   return (
