@@ -14,3 +14,7 @@ export function increment(state: State): State {
 export function decrement(state: State): State {
     return { ...state, count: state.count > 0? state.count - 1:0 };
 }
+
+export function reset(state: State): State {
+    return {...state, count: 0 };
+}

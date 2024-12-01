@@ -1,4 +1,4 @@
-import { decrement, increment, updateData } from "./State";
+import { decrement, increment, reset, updateData } from "./State";
 
 test("properly increments count", () => {
     const initialState = { data: "", count: 0 };
@@ -16,7 +16,13 @@ test("properly decrements count", () => {
     const initialState = { data: "", count: 1 };
     const state = decrement(initialState);
     const state2 = decrement(state);
-    
+
     expect(state.count).toBe(0);
     expect(state2.count).toBe(0);
+});
+
+test("properly resets count", () => {
+    const initialState = { data: "", count: 1 };
+    const state = reset(initialState);
+    expect(state.count).toBe(0);
 });
