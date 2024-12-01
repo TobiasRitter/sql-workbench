@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import { increment, State, updateData } from './State';
+import { decrement, increment, State, updateData } from './State';
 
 const initialState: State = { data: "", count: 0 };
 
@@ -20,6 +20,7 @@ function App() {
       {state.data ? <h1>{state.data}</h1> : <h1>Loading...</h1>}
       {state.count}
       <button onClick={() => setState(increment)}>Increment</button>
+      <button onClick={() => setState(decrement)}>Decrement</button>
     </div >
   );
 }
