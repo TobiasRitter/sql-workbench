@@ -1,22 +1,8 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-
-type State = {
-  data: string;
-  count: number;
-}
+import { fetchApi, increment, State } from './State';
 
 const initialState: State = { data: "", count: 0 };
-
-async function fetchApi(state: State): Promise<State> {
-  return await fetch('/api').then(res => res.json()).then(data => {
-    return { ...state, data };
-  });
-}
-
-function increment(state: State): State {
-  return { ...state, count: state.count + 1 };
-}
 
 function App() {
   const [state, setState] = useState<State>(initialState);
