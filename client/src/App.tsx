@@ -4,15 +4,15 @@ import { increment, State } from './State';
 
 const initialState: State = { data: "", count: 0 };
 
-export async function myget(url: string): Promise<any> {
-  return await fetch(url).then(res => res.json())
+export function myget(url: string, callback: (data: any) => void): void {
+  fetch(url).then(res => res.json()).then(callback);
 }
 
 function App() {
   const [state, setState] = useState<State>(initialState);
 
   useEffect(() => {
-    myget("/api").then(data => setState(prev => ({ ...prev, data })));
+    myget("/api", data => setState(prev => ({ ...prev, data })));
   }, []);
 
   return (
