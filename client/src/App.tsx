@@ -1,19 +1,26 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './App.css';
 
-function App() {
-  const [data, setData] = useState<string>("");
+type State = {
+  data: string;
+}
 
-  useEffect(() => {
-    fetch('/api').then(res => res.json()).then(data => {
-      console.log(data);
-      setData(data);
-    });
-  }, []);
+const initialState: State = { data: "" };
+
+async function fetchApi(state: State): Promise<State> {
+  return await fetch('/api').then(res => res.json()).then(data => {
+    return { ...state, data };
+  });
+}
+
+function App() {
+  const [state, setState] = useState<State>(initialState);
+
+  fetchApi(state).then(newState => { setState(newState) });
 
   return (
     <div className="App">
-      {data ? <h1>{data}</h1> : <h1>Loading...</h1>}
+      {state.data ? <h1>{state.data}</h1> : <h1>Loading...</h1>}
     </div >
   );
 }
