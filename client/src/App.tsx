@@ -8,7 +8,7 @@ function App() {
   const [state, setState] = useState<State>(initialState);
 
   useEffect(() => {
-    fetchApi(state).then(setState);
+    fetchApi().then(data => setState(prev => ({ ...prev, data })));
   }, []);
 
   return (

@@ -3,10 +3,12 @@ export type State = {
     count: number;
 }
 
-export async function fetchApi(state: State): Promise<State> {
-    return await fetch('/api').then(res => res.json()).then(data => {
-        return { ...state, data };
-    });
+export async function fetchApi() : Promise<any>{
+    return await fetch('/api').then(res => res.json())
+}
+
+export function updateData(state: State, data: string): State {
+    return { ...state, data };
 }
 
 export function increment(state: State): State {
