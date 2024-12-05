@@ -1,5 +1,6 @@
 import queue
 from typing import Generator
+from uuid import uuid4
 from fastapi import Depends, FastAPI, Request
 from pydantic import BaseModel
 from sqlmodel import SQLModel, Field, create_engine, Session, select
@@ -72,7 +73,8 @@ def reset(db: Session = Depends(get_session)) -> str:
 @app.post("/api/greet")
 def greet(data: Data) -> str:
     data_store.put(data)
-    return f"Hello, {data.name}!"
+    uid = uuid4()
+    return str(uid)
 
 
 @app.get("/{rest_of_path:path}")

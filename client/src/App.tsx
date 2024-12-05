@@ -15,8 +15,12 @@ function App() {
     myget("/api", data => setState(prev => updateData(prev, data)));
   }, []);
 
+  const params = new URLSearchParams(window.location.search);
+  const uid = params.get("uid");
+
   return (
     <div className="App">
+      {uid ? <h1>uid: {uid}</h1> : <h1>No uid</h1>}
       {state.data ? <h1>{state.data}</h1> : <h1>Loading...</h1>}
       {state.count}
       <button onClick={() => setState(increment)}>Increment</button>
