@@ -1,5 +1,7 @@
+import queue
 from typing import Generator
 from fastapi import Depends, FastAPI, Request
+from pydantic import BaseModel
 from sqlmodel import SQLModel, Field, create_engine, Session, select
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -20,6 +22,13 @@ def get_session(token: str) -> Generator[Session, None, None]:
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="./client/build/static"), name="static")
 templates = Jinja2Templates(directory="./client/build")
+
+data_store = queue.Queue(maxsize=128)
+
+
+class Data(BaseModel):
+    name: str
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -58,6 +67,12 @@ def reset(db: Session = Depends(get_session)) -> str:
     db.add(Hero(name="Thor"))
     db.commit()
     return "Database reset."
+
+
+@app.post("/api/greet")
+def greet(data: Data) -> str:
+    data_store.put(data)
+    return f"Hello, {data.name}!"
 
 
 @app.get("/{rest_of_path:path}")
