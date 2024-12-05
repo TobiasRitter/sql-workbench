@@ -1,4 +1,4 @@
-import queue
+from collections import OrderedDict
 from typing import Generator
 from uuid import uuid4
 from fastapi import Depends, FastAPI, Request
@@ -24,12 +24,28 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="./client/build/static"), name="static")
 templates = Jinja2Templates(directory="./client/build")
 
-data_store = queue.Queue(maxsize=128)
-
 
 class Data(BaseModel):
     name: str
 
+
+class LimitedSizeDict(OrderedDict):
+    def __init__(self, *args, **kwds):
+        self.size_limit = kwds.pop("size_limit", None)
+        OrderedDict.__init__(self, *args, **kwds)
+        self._check_size_limit()
+
+    def __setitem__(self, key, value):
+        OrderedDict.__setitem__(self, key, value)
+        self._check_size_limit()
+
+    def _check_size_limit(self):
+        if self.size_limit is not None:
+            while len(self) > self.size_limit:
+                self.popitem(last=False)
+
+
+data_store = LimitedSizeDict(size_limit=128)
 
 app.add_middleware(
     CORSMiddleware,
@@ -72,9 +88,14 @@ def reset(db: Session = Depends(get_session)) -> str:
 
 @app.post("/api/greet")
 def greet(data: Data) -> str:
-    data_store.put(data)
-    uid = uuid4()
-    return str(uid)
+    uid = str(uuid4())
+    data_store[uid] = data
+    return uid
+
+
+@app.get("/api/greet/{uid}")
+def greet(uid: str) -> str:
+    return data_store.get(uid).name
 
 
 @app.get("/{rest_of_path:path}")
