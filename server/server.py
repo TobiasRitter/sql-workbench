@@ -1,7 +1,9 @@
 from collections import OrderedDict
+from http import HTTPStatus
+from pathlib import Path
 from typing import Generator
 from uuid import uuid4
-from fastapi import Depends, FastAPI, Request
+from fastapi import Depends, FastAPI, HTTPException, Request
 from pydantic import BaseModel
 from sqlmodel import SQLModel, Field, create_engine, Session, select
 from fastapi.middleware.cors import CORSMiddleware
@@ -91,6 +93,18 @@ def greet(data: Data) -> str:
     uid = str(uuid4())
     data_store[uid] = data
     return uid
+
+
+@app.get("/api/files")
+def get_files(dir_path: str | None = None) -> list[tuple[str, bool]]:
+    dir = Path(dir_path) if dir_path else Path("/")
+
+    if not dir.is_dir():
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST, detail="path must be a directory"
+        )
+
+    return [(str(path), path.is_dir()) for path in dir.glob("*")]
 
 
 @app.get("/api/greet/{uid}")

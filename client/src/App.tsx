@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import { decrement, increment, reset, State, updateData } from './State';
+import Plot from 'react-plotly.js';
 
 const initialState: State = { data: "", count: 0 };
 
@@ -29,6 +30,19 @@ function App() {
       <button onClick={() => setState(increment)}>Increment</button>
       <button onClick={() => setState(decrement)}>Decrement</button>
       <button onClick={() => setState(reset)}>Reset</button>
+      <Plot
+        data={[
+          {
+            x: [1, 2, 3],
+            y: [2, 6, 3],
+            type: 'scatter',
+            mode: 'lines+markers',
+            marker: { color: 'red' },
+          },
+          { type: 'bar', x: [1, 2, 3], y: [2, 5, 3] },
+        ]}
+        layout={{ width: 1200, height: 800, title: { text: 'A Fancy Plot' } }}
+      />
     </div >
   );
 }
