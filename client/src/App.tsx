@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import { decrement, increment, reset, State, updateData } from './State';
 import Plot from 'react-plotly.js';
-import createModule from "./main.js";
+import Module from "./main.js";
 
 const initialState: State = { data: "", count: 0 };
 
@@ -14,7 +14,7 @@ function App() {
   const [state, setState] = useState<State>(initialState);
 
   useEffect(() => {
-    createModule().then((Module: any) => {
+    Module().then((Module: any) => {
       let add = Module.cwrap("add", "number", ["number", "number"]);
       console.log(add(1, 2));
     });
