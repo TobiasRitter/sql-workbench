@@ -15,8 +15,7 @@ function App() {
 
   useEffect(() => {
     Module().then((Module: any) => {
-      let add = Module.cwrap("add", "number", ["number", "number"]);
-      console.log(add(1, 2));
+      console.log(Module.add(1, 2));
     });
 
     const params = new URLSearchParams(window.location.search);

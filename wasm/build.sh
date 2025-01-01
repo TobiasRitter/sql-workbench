@@ -1,1 +1,1 @@
-em++ main.cpp -o main.js -s EXPORTED_FUNCTIONS="['_add']" -s SINGLE_FILE=1 -s MODULARIZE=1 -s EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]'
+em++ -lembind main.cpp -o main.js -s SINGLE_FILE=1 -s MODULARIZE=1

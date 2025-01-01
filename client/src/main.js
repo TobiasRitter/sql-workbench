@@ -32,9 +32,21 @@ Module['ready'] = new Promise(function(resolve, reject) {
   readyPromiseReject = reject;
 });
 
-      if (!Object.getOwnPropertyDescriptor(Module['ready'], '_add')) {
-        Object.defineProperty(Module['ready'], '_add', { configurable: true, get: function() { abort('You are getting _add on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js') } });
-        Object.defineProperty(Module['ready'], '_add', { configurable: true, set: function() { abort('You are setting _add on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js') } });
+      if (!Object.getOwnPropertyDescriptor(Module['ready'], '_main')) {
+        Object.defineProperty(Module['ready'], '_main', { configurable: true, get: function() { abort('You are getting _main on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js') } });
+        Object.defineProperty(Module['ready'], '_main', { configurable: true, set: function() { abort('You are setting _main on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js') } });
+      }
+    
+
+      if (!Object.getOwnPropertyDescriptor(Module['ready'], '___getTypeName')) {
+        Object.defineProperty(Module['ready'], '___getTypeName', { configurable: true, get: function() { abort('You are getting ___getTypeName on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js') } });
+        Object.defineProperty(Module['ready'], '___getTypeName', { configurable: true, set: function() { abort('You are setting ___getTypeName on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js') } });
+      }
+    
+
+      if (!Object.getOwnPropertyDescriptor(Module['ready'], '___embind_register_native_and_builtin_types')) {
+        Object.defineProperty(Module['ready'], '___embind_register_native_and_builtin_types', { configurable: true, get: function() { abort('You are getting ___embind_register_native_and_builtin_types on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js') } });
+        Object.defineProperty(Module['ready'], '___embind_register_native_and_builtin_types', { configurable: true, set: function() { abort('You are setting ___embind_register_native_and_builtin_types on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js') } });
       }
     
 
@@ -825,13 +837,6 @@ function cwrap(ident, returnType, argTypes, opts) {
 
 // We used to include malloc/free by default in the past. Show a helpful error in
 // builds with assertions.
-function _malloc() {
-  abort("malloc() called but not included in the build - add '_malloc' to EXPORTED_FUNCTIONS");
-}
-function _free() {
-  // Show a helpful error since we used to include free by default in the past.
-  abort("free() called but not included in the build - add '_free' to EXPORTED_FUNCTIONS");
-}
 
 // include: runtime_legacy.js
 
@@ -856,7 +861,7 @@ function allocate(slab, allocator) {
   if (allocator == ALLOC_STACK) {
     ret = stackAlloc(slab.length);
   } else {
-    ret = abort('malloc was not included, but is needed in allocate. Adding "_malloc" to EXPORTED_FUNCTIONS should fix that. This may be a bug in the compiler, please file an issue.');;
+    ret = _malloc(slab.length);
   }
 
   if (!slab.subarray && !slab.slice) {
@@ -1202,7 +1207,7 @@ function lengthBytesUTF32(str) {
 // It is the responsibility of the caller to free() that memory.
 function allocateUTF8(str) {
   var size = lengthBytesUTF8(str) + 1;
-  var ret = abort('malloc was not included, but is needed in allocateUTF8. Adding "_malloc" to EXPORTED_FUNCTIONS should fix that. This may be a bug in the compiler, please file an issue.');;
+  var ret = _malloc(size);
   if (ret) stringToUTF8Array(str, HEAP8, ret, size);
   return ret;
 }
@@ -1613,7 +1618,7 @@ function createExportWrapper(name, fixedasm) {
 }
 
 var wasmBinaryFile;
-  wasmBinaryFile = 'data:application/octet-stream;base64,AGFzbQEAAAABpYCAgAAHYAABf2AAAGABfwBgAX8Bf2ACf38Bf2ADf39/AX9gA39+fwF+A5CAgIAADwEEAAIDAQAAAAIAAwECAASFgICAAAFwAQEBBYaAgIAAAQGAAoACBpOAgIAAA38BQZCIwAILfwFBAAt/AUEACwf1gYCAAA0GbWVtb3J5AgARX193YXNtX2NhbGxfY3RvcnMAAANhZGQAARlfX2luZGlyZWN0X2Z1bmN0aW9uX3RhYmxlAQAQX19lcnJub19sb2NhdGlvbgAODF9fc3RkaW9fZXhpdAAMFWVtc2NyaXB0ZW5fc3RhY2tfaW5pdAAFGWVtc2NyaXB0ZW5fc3RhY2tfZ2V0X2ZyZWUABhllbXNjcmlwdGVuX3N0YWNrX2dldF9iYXNlAAcYZW1zY3JpcHRlbl9zdGFja19nZXRfZW5kAAgJc3RhY2tTYXZlAAIMc3RhY2tSZXN0b3JlAAMKc3RhY2tBbGxvYwAECruCgIAADwQAEAULOQEGfyMAIQJBECEDIAIgA2shBCAEIAA2AgwgBCABNgIIIAQoAgwhBSAEKAIIIQYgBSAGaiEHIAcPCwQAIwALBgAgACQACxIBAn8jACAAa0FwcSIBJAAgAQsUAEGQiMACJAJBkAhBD2pBcHEkAQsHACMAIwFrCwQAIwILBAAjAQsCAAsKAEGACBAJQYQICwQAQQELOQEBfwJAEAooAgAiAEUNAANAIAAQDSAAKAI4IgANAAsLQQAoAogIEA1BACgCiAgQDUEAKAKICBANC2EBAn8CQCAARQ0AAkAgACgCTEEASA0AIAAQCxoLAkAgACgCFCAAKAIcRg0AIABBAEEAIAAoAiQRBQAaCyAAKAIEIgEgACgCCCICRg0AIAAgASACa6xBASAAKAIoEQYAGgsLBQBBjAgL';
+  wasmBinaryFile = 'data:application/octet-stream;base64,AGFzbQEAAAAB4oCAgAAPYAF/AX9gAX8AYAV/f39/fwBgBn9/f39/fwBgAAF/YAR/f39/AGADf39/AX9gAABgAn9/AGACf38Bf2ADf39/AGAEf39/fwF/YAN/fn8BfmAFf39/fn4AYAd/f39/f39/AALxgoCAAAwDZW52GV9lbWJpbmRfcmVnaXN0ZXJfZnVuY3Rpb24AAwNlbnYVX2VtYmluZF9yZWdpc3Rlcl92b2lkAAgDZW52FV9lbWJpbmRfcmVnaXN0ZXJfYm9vbAACA2VudhhfZW1iaW5kX3JlZ2lzdGVyX2ludGVnZXIAAgNlbnYWX2VtYmluZF9yZWdpc3Rlcl9mbG9hdAAKA2VudhtfZW1iaW5kX3JlZ2lzdGVyX3N0ZF9zdHJpbmcACANlbnYcX2VtYmluZF9yZWdpc3Rlcl9zdGRfd3N0cmluZwAKA2VudhZfZW1iaW5kX3JlZ2lzdGVyX2VtdmFsAAgDZW52HF9lbWJpbmRfcmVnaXN0ZXJfbWVtb3J5X3ZpZXcACgNlbnYVZW1zY3JpcHRlbl9tZW1jcHlfYmlnAAYDZW52FmVtc2NyaXB0ZW5fcmVzaXplX2hlYXAAAANlbnYXX2VtYmluZF9yZWdpc3Rlcl9iaWdpbnQADgPDgICAAEIHCQcIBgAABAAABAAHBgAABAYAAQQAAQkAAQEBAQEBBgYABgsFBQUFCQUCBQIDAgICAwMDAAQBAAcEBAQBBAAHAQ0EhYCAgAABcAEVFQWGgICAAAEBgAKAAgaTgICAAAN/AUHAnsACC38BQQALfwFBAAsHvIKAgAAQBm1lbW9yeQIAEV9fd2FzbV9jYWxsX2N0b3JzAAwZX19pbmRpcmVjdF9mdW5jdGlvbl90YWJsZQEADV9fZ2V0VHlwZU5hbWUAFypfX2VtYmluZF9yZWdpc3Rlcl9uYXRpdmVfYW5kX2J1aWx0aW5fdHlwZXMAGBBfX2Vycm5vX2xvY2F0aW9uABwMX19zdGRpb19leGl0AEsGbWFsbG9jAB4EZnJlZQAfFWVtc2NyaXB0ZW5fc3RhY2tfaW5pdABEGWVtc2NyaXB0ZW5fc3RhY2tfZ2V0X2ZyZWUARRllbXNjcmlwdGVuX3N0YWNrX2dldF9iYXNlAEYYZW1zY3JpcHRlbl9zdGFja19nZXRfZW5kAEcJc3RhY2tTYXZl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bXNjcmlwdGVuOjptZW1vcnlfdmlldzxpbnQxNl90PgBlbXNjcmlwdGVuOjptZW1vcnlfdmlldzx1aW50MzJfdD4AZW1zY3JpcHRlbjo6bWVtb3J5X3ZpZXc8aW50MzJfdD4AZW1zY3JpcHRlbjo6bWVtb3J5X3ZpZXc8Y2hhcj4AZW1zY3JpcHRlbjo6bWVtb3J5X3ZpZXc8dW5zaWduZWQgY2hhcj4Ac3RkOjpiYXNpY19zdHJpbmc8dW5zaWduZWQgY2hhcj4AZW1zY3JpcHRlbjo6bWVtb3J5X3ZpZXc8c2lnbmVkIGNoYXI+AGVtc2NyaXB0ZW46Om1lbW9yeV92aWV3PGxvbmc+AGVtc2NyaXB0ZW46Om1lbW9yeV92aWV3PHVuc2lnbmVkIGxvbmc+AGVtc2NyaXB0ZW46Om1lbW9yeV92aWV3PGRvdWJsZT4AAOALAADgCwAA4AsAAGlpaWkATlN0M19fMjEyYmFzaWNfc3RyaW5nSWNOU18xMWNoYXJfdHJhaXRzSWNFRU5TXzlhbGxvY2F0b3JJY0VFRUUATlN0M19fMjIxX19iYXNpY19zdHJpbmdfY29tbW9uSUxiMUVFRQAAAEQMAABUBwAAyAwAABUHAAAAAAAAAQAAAHwHAAAAAAAATlN0M19fMjEyYmFzaWNfc3RyaW5nSWhOU18xMWNoYXJfdHJhaXRzSWhFRU5TXzlhbGxvY2F0b3JJaEVFRUUAAMgMAACcBwAAAAAAAAEAAAB8BwAAAAAAAE5TdDNfXzIxMmJhc2ljX3N0cmluZ0l3TlNfMTFjaGFyX3RyYWl0c0l3RUVOU185YWxsb2NhdG9ySXdFRUVFAADIDAAA9AcAAAAAAAABAAAAfAcAAAAAAABOU3QzX18yMTJiYXNpY19zdHJpbmdJRHNOU18xMWNoYXJfdHJhaXRzSURzRUVOU185YWxsb2NhdG9ySURzRUVFRQAAAMgMAABMCAAAAAAAAAEAAAB8BwAAAAAAAE5TdDNfXzIxMmJhc2ljX3N0cmluZ0lEaU5TXzExY2hhcl90cmFpdHNJRGlFRU5TXzlhbGxvY2F0b3JJRGlFRUVFAAAAyAwAAKgIAAAAAAAAAQAAAHwHAAAAAAAATjEwZW1zY3JpcHRlbjN2YWxFAABEDAAABAkAAE4xMGVtc2NyaXB0ZW4xMW1lbW9yeV92aWV3SWNFRQAARAwAACAJAABOMTBlbXNjcmlwdGVuMTFtZW1vcnlfdmlld0lhRUUAAEQMAABICQAATjEwZW1zY3JpcHRlbjExbWVtb3J5X3ZpZXdJaEVFAABEDAAAcAkAAE4xMGVtc2NyaXB0ZW4xMW1lbW9yeV92aWV3SXNFRQAARAwAAJgJAABOMTBlbXNjcmlwdGVuMTFtZW1vcnlfdmlld0l0RUUAAEQMAADACQAATjEwZW1zY3JpcHRlbjExbWVtb3J5X3ZpZXdJaUVFAABEDAAA6AkAAE4xMGVtc2NyaXB0ZW4xMW1lbW9yeV92aWV3SWpFRQAARAwAABAKAABOMTBlbXNjcmlwdGVuMTFtZW1vcnlfdmlld0lsRUUAAEQMAAA4CgAATjEwZW1zY3JpcHRlbjExbWVtb3J5X3ZpZXdJbUVFAABEDAAAYAoAAE4xMGVtc2NyaXB0ZW4xMW1lbW9yeV92aWV3SWZFRQAARAwAAIgKAABOMTBlbXNjcmlwdGVuMTFtZW1vcnlfdmlld0lkRUUAAEQMAACwCgAATjEwX19jeHhhYml2MTE2X19zaGltX3R5cGVfaW5mb0UAAAAAbAwAANgKAAAsDQAATjEwX19jeHhhYml2MTE3X19jbGFzc190eXBlX2luZm9FAAAAbAwAAAgLAAD8CgAAAAAAAHwLAAADAAAABAAAAAUAAAAGAAAABwAAAE4xMF9fY3h4YWJpdjEyM19fZnVuZGFtZW50YWxfdHlwZV9pbmZvRQBsDAAAVAsAAPwKAAB2AAAAQAsAAIgLAABiAAAAQAsAAJQLAABjAAAAQAsAAKALAABoAAAAQAsAAKwLAABhAAAAQAsAALgLAABzAAAAQAsAAMQLAAB0AAAAQAsAANALAABpAAAAQAsAANwLAABqAAAAQAsAAOgLAABsAAAAQAsAAPQLAABtAAAAQAsAAAAMAAB4AAAAQAsAAAwMAAB5AAAAQAsAABgMAABmAAAAQAsAACQMAABkAAAAQAsAADAMAAAAAAAALAsAAAMAAAAIAAAABQAAAAYAAAAJAAAACgAAAAsAAAAMAAAAAAAAALQMAAADAAAADQAAAAUAAAAGAAAACQAAAA4AAAAPAAAAEAAAAE4xMF9fY3h4YWJpdjEyMF9fc2lfY2xhc3NfdHlwZV9pbmZvRQAAAABsDAAAjAwAACwLAAAAAAAAEA0AAAMAAAARAAAABQAAAAYAAAAJAAAAEgAAABMAAAAUAAAATjEwX19jeHhhYml2MTIxX192bWlfY2xhc3NfdHlwZV9pbmZvRQAAAGwMAADoDAAALAsAAFN0OXR5cGVfaW5mbwAAAABEDAAAHA0AAABBtBoLBEAPUAA=';
   if (!isDataURI(wasmBinaryFile)) {
     wasmBinaryFile = locateFile(wasmBinaryFile);
   }
@@ -1891,6 +1896,911 @@ var ASM_CONSTS = {
       if (Module['extraStackTrace']) js += '\n' + Module['extraStackTrace']();
       return demangleAll(js);
     }
+
+  function __embind_register_bigint(primitiveType, name, size, minRange, maxRange) {}
+
+  function getShiftFromSize(size) {
+      
+      switch (size) {
+          case 1: return 0;
+          case 2: return 1;
+          case 4: return 2;
+          case 8: return 3;
+          default:
+              throw new TypeError('Unknown type size: ' + size);
+      }
+    }
+  
+  function embind_init_charCodes() {
+      var codes = new Array(256);
+      for (var i = 0; i < 256; ++i) {
+          codes[i] = String.fromCharCode(i);
+      }
+      embind_charCodes = codes;
+    }
+  var embind_charCodes = undefined;
+  function readLatin1String(ptr) {
+      var ret = "";
+      var c = ptr;
+      while (HEAPU8[c]) {
+          ret += embind_charCodes[HEAPU8[c++]];
+      }
+      return ret;
+    }
+  
+  var awaitingDependencies = {};
+  
+  var registeredTypes = {};
+  
+  var typeDependencies = {};
+  
+  var char_0 = 48;
+  
+  var char_9 = 57;
+  function makeLegalFunctionName(name) {
+      if (undefined === name) {
+          return '_unknown';
+      }
+      name = name.replace(/[^a-zA-Z0-9_]/g, '$');
+      var f = name.charCodeAt(0);
+      if (f >= char_0 && f <= char_9) {
+          return '_' + name;
+      } else {
+          return name;
+      }
+    }
+  function createNamedFunction(name, body) {
+      name = makeLegalFunctionName(name);
+      /*jshint evil:true*/
+      return new Function(
+          "body",
+          "return function " + name + "() {\n" +
+          "    \"use strict\";" +
+          "    return body.apply(this, arguments);\n" +
+          "};\n"
+      )(body);
+    }
+  function extendError(baseErrorType, errorName) {
+      var errorClass = createNamedFunction(errorName, function(message) {
+          this.name = errorName;
+          this.message = message;
+  
+          var stack = (new Error(message)).stack;
+          if (stack !== undefined) {
+              this.stack = this.toString() + '\n' +
+                  stack.replace(/^Error(:[^\n]*)?\n/, '');
+          }
+      });
+      errorClass.prototype = Object.create(baseErrorType.prototype);
+      errorClass.prototype.constructor = errorClass;
+      errorClass.prototype.toString = function() {
+          if (this.message === undefined) {
+              return this.name;
+          } else {
+              return this.name + ': ' + this.message;
+          }
+      };
+  
+      return errorClass;
+    }
+  var BindingError = undefined;
+  function throwBindingError(message) {
+      throw new BindingError(message);
+    }
+  
+  var InternalError = undefined;
+  function throwInternalError(message) {
+      throw new InternalError(message);
+    }
+  function whenDependentTypesAreResolved(myTypes, dependentTypes, getTypeConverters) {
+      myTypes.forEach(function(type) {
+          typeDependencies[type] = dependentTypes;
+      });
+  
+      function onComplete(typeConverters) {
+          var myTypeConverters = getTypeConverters(typeConverters);
+          if (myTypeConverters.length !== myTypes.length) {
+              throwInternalError('Mismatched type converter count');
+          }
+          for (var i = 0; i < myTypes.length; ++i) {
+              registerType(myTypes[i], myTypeConverters[i]);
+          }
+      }
+  
+      var typeConverters = new Array(dependentTypes.length);
+      var unregisteredTypes = [];
+      var registered = 0;
+      dependentTypes.forEach(function(dt, i) {
+          if (registeredTypes.hasOwnProperty(dt)) {
+              typeConverters[i] = registeredTypes[dt];
+          } else {
+              unregisteredTypes.push(dt);
+              if (!awaitingDependencies.hasOwnProperty(dt)) {
+                  awaitingDependencies[dt] = [];
+              }
+              awaitingDependencies[dt].push(function() {
+                  typeConverters[i] = registeredTypes[dt];
+                  ++registered;
+                  if (registered === unregisteredTypes.length) {
+                      onComplete(typeConverters);
+                  }
+              });
+          }
+      });
+      if (0 === unregisteredTypes.length) {
+          onComplete(typeConverters);
+      }
+    }
+  /** @param {Object=} options */
+  function registerType(rawType, registeredInstance, options = {}) {
+      if (!('argPackAdvance' in registeredInstance)) {
+          throw new TypeError('registerType registeredInstance requires argPackAdvance');
+      }
+  
+      var name = registeredInstance.name;
+      if (!rawType) {
+          throwBindingError('type "' + name + '" must have a positive integer typeid pointer');
+      }
+      if (registeredTypes.hasOwnProperty(rawType)) {
+          if (options.ignoreDuplicateRegistrations) {
+              return;
+          } else {
+              throwBindingError("Cannot register type '" + name + "' twice");
+          }
+      }
+  
+      registeredTypes[rawType] = registeredInstance;
+      delete typeDependencies[rawType];
+  
+      if (awaitingDependencies.hasOwnProperty(rawType)) {
+          var callbacks = awaitingDependencies[rawType];
+          delete awaitingDependencies[rawType];
+          callbacks.forEach(function(cb) {
+              cb();
+          });
+      }
+    }
+  function __embind_register_bool(rawType, name, size, trueValue, falseValue) {
+      var shift = getShiftFromSize(size);
+  
+      name = readLatin1String(name);
+      registerType(rawType, {
+          name: name,
+          'fromWireType': function(wt) {
+              // ambiguous emscripten ABI: sometimes return values are
+              // true or false, and sometimes integers (0 or 1)
+              return !!wt;
+          },
+          'toWireType': function(destructors, o) {
+              return o ? trueValue : falseValue;
+          },
+          'argPackAdvance': 8,
+          'readValueFromPointer': function(pointer) {
+              // TODO: if heap is fixed (like in asm.js) this could be executed outside
+              var heap;
+              if (size === 1) {
+                  heap = HEAP8;
+              } else if (size === 2) {
+                  heap = HEAP16;
+              } else if (size === 4) {
+                  heap = HEAP32;
+              } else {
+                  throw new TypeError("Unknown boolean type size: " + name);
+              }
+              return this['fromWireType'](heap[pointer >> shift]);
+          },
+          destructorFunction: null, // This type does not need a destructor
+      });
+    }
+
+  var emval_free_list = [];
+  
+  var emval_handle_array = [{},{value:undefined},{value:null},{value:true},{value:false}];
+  function __emval_decref(handle) {
+      if (handle > 4 && 0 === --emval_handle_array[handle].refcount) {
+          emval_handle_array[handle] = undefined;
+          emval_free_list.push(handle);
+      }
+    }
+  
+  function count_emval_handles() {
+      var count = 0;
+      for (var i = 5; i < emval_handle_array.length; ++i) {
+          if (emval_handle_array[i] !== undefined) {
+              ++count;
+          }
+      }
+      return count;
+    }
+  
+  function get_first_emval() {
+      for (var i = 5; i < emval_handle_array.length; ++i) {
+          if (emval_handle_array[i] !== undefined) {
+              return emval_handle_array[i];
+          }
+      }
+      return null;
+    }
+  function init_emval() {
+      Module['count_emval_handles'] = count_emval_handles;
+      Module['get_first_emval'] = get_first_emval;
+    }
+  var Emval = {toValue:function(handle) {
+        if (!handle) {
+            throwBindingError('Cannot use deleted val. handle = ' + handle);
+        }
+        return emval_handle_array[handle].value;
+      },toHandle:function(value) {
+        switch (value) {
+          case undefined :{ return 1; }
+          case null :{ return 2; }
+          case true :{ return 3; }
+          case false :{ return 4; }
+          default:{
+            var handle = emval_free_list.length ?
+                emval_free_list.pop() :
+                emval_handle_array.length;
+    
+            emval_handle_array[handle] = {refcount: 1, value: value};
+            return handle;
+            }
+          }
+      }};
+  
+  function simpleReadValueFromPointer(pointer) {
+      return this['fromWireType'](HEAPU32[pointer >> 2]);
+    }
+  function __embind_register_emval(rawType, name) {
+      name = readLatin1String(name);
+      registerType(rawType, {
+          name: name,
+          'fromWireType': function(handle) {
+              var rv = Emval.toValue(handle);
+              __emval_decref(handle);
+              return rv;
+          },
+          'toWireType': function(destructors, value) {
+              return Emval.toHandle(value);
+          },
+          'argPackAdvance': 8,
+          'readValueFromPointer': simpleReadValueFromPointer,
+          destructorFunction: null, // This type does not need a destructor
+  
+          // TODO: do we need a deleteObject here?  write a test where
+          // emval is passed into JS via an interface
+      });
+    }
+
+  function _embind_repr(v) {
+      if (v === null) {
+          return 'null';
+      }
+      var t = typeof v;
+      if (t === 'object' || t === 'array' || t === 'function') {
+          return v.toString();
+      } else {
+          return '' + v;
+      }
+    }
+  
+  function floatReadValueFromPointer(name, shift) {
+      switch (shift) {
+          case 2: return function(pointer) {
+              return this['fromWireType'](HEAPF32[pointer >> 2]);
+          };
+          case 3: return function(pointer) {
+              return this['fromWireType'](HEAPF64[pointer >> 3]);
+          };
+          default:
+              throw new TypeError("Unknown float type: " + name);
+      }
+    }
+  function __embind_register_float(rawType, name, size) {
+      var shift = getShiftFromSize(size);
+      name = readLatin1String(name);
+      registerType(rawType, {
+          name: name,
+          'fromWireType': function(value) {
+               return value;
+          },
+          'toWireType': function(destructors, value) {
+              if (typeof value != "number" && typeof value != "boolean") {
+                  throw new TypeError('Cannot convert "' + _embind_repr(value) + '" to ' + this.name);
+              }
+              // The VM will perform JS to Wasm value conversion, according to the spec:
+              // https://www.w3.org/TR/wasm-js-api-1/#towebassemblyvalue
+              return value;
+          },
+          'argPackAdvance': 8,
+          'readValueFromPointer': floatReadValueFromPointer(name, shift),
+          destructorFunction: null, // This type does not need a destructor
+      });
+    }
+
+  function new_(constructor, argumentList) {
+      if (!(constructor instanceof Function)) {
+          throw new TypeError('new_ called with constructor type ' + typeof(constructor) + " which is not a function");
+      }
+  
+      /*
+       * Previously, the following line was just:
+  
+       function dummy() {};
+  
+       * Unfortunately, Chrome was preserving 'dummy' as the object's name, even though at creation, the 'dummy' has the
+       * correct constructor name.  Thus, objects created with IMVU.new would show up in the debugger as 'dummy', which
+       * isn't very helpful.  Using IMVU.createNamedFunction addresses the issue.  Doublely-unfortunately, there's no way
+       * to write a test for this behavior.  -NRD 2013.02.22
+       */
+      var dummy = createNamedFunction(constructor.name || 'unknownFunctionName', function(){});
+      dummy.prototype = constructor.prototype;
+      var obj = new dummy;
+  
+      var r = constructor.apply(obj, argumentList);
+      return (r instanceof Object) ? r : obj;
+    }
+  
+  function runDestructors(destructors) {
+      while (destructors.length) {
+          var ptr = destructors.pop();
+          var del = destructors.pop();
+          del(ptr);
+      }
+    }
+  function craftInvokerFunction(humanName, argTypes, classType, cppInvokerFunc, cppTargetFunc) {
+      // humanName: a human-readable string name for the function to be generated.
+      // argTypes: An array that contains the embind type objects for all types in the function signature.
+      //    argTypes[0] is the type object for the function return value.
+      //    argTypes[1] is the type object for function this object/class type, or null if not crafting an invoker for a class method.
+      //    argTypes[2...] are the actual function parameters.
+      // classType: The embind type object for the class to be bound, or null if this is not a method of a class.
+      // cppInvokerFunc: JS Function object to the C++-side function that interops into C++ code.
+      // cppTargetFunc: Function pointer (an integer to FUNCTION_TABLE) to the target C++ function the cppInvokerFunc will end up calling.
+      var argCount = argTypes.length;
+  
+      if (argCount < 2) {
+          throwBindingError("argTypes array size mismatch! Must at least get return value and 'this' types!");
+      }
+  
+      var isClassMethodFunc = (argTypes[1] !== null && classType !== null);
+  
+      // Free functions with signature "void function()" do not need an invoker that marshalls between wire types.
+  // TODO: This omits argument count check - enable only at -O3 or similar.
+  //    if (ENABLE_UNSAFE_OPTS && argCount == 2 && argTypes[0].name == "void" && !isClassMethodFunc) {
+  //       return FUNCTION_TABLE[fn];
+  //    }
+  
+      // Determine if we need to use a dynamic stack to store the destructors for the function parameters.
+      // TODO: Remove this completely once all function invokers are being dynamically generated.
+      var needsDestructorStack = false;
+  
+      for (var i = 1; i < argTypes.length; ++i) { // Skip return value at index 0 - it's not deleted here.
+          if (argTypes[i] !== null && argTypes[i].destructorFunction === undefined) { // The type does not define a destructor function - must use dynamic stack
+              needsDestructorStack = true;
+              break;
+          }
+      }
+  
+      var returns = (argTypes[0].name !== "void");
+  
+      var argsList = "";
+      var argsListWired = "";
+      for (var i = 0; i < argCount - 2; ++i) {
+          argsList += (i!==0?", ":"")+"arg"+i;
+          argsListWired += (i!==0?", ":"")+"arg"+i+"Wired";
+      }
+  
+      var invokerFnBody =
+          "return function "+makeLegalFunctionName(humanName)+"("+argsList+") {\n" +
+          "if (arguments.length !== "+(argCount - 2)+") {\n" +
+              "throwBindingError('function "+humanName+" called with ' + arguments.length + ' arguments, expected "+(argCount - 2)+" args!');\n" +
+          "}\n";
+  
+      if (needsDestructorStack) {
+          invokerFnBody +=
+              "var destructors = [];\n";
+      }
+  
+      var dtorStack = needsDestructorStack ? "destructors" : "null";
+      var args1 = ["throwBindingError", "invoker", "fn", "runDestructors", "retType", "classParam"];
+      var args2 = [throwBindingError, cppInvokerFunc, cppTargetFunc, runDestructors, argTypes[0], argTypes[1]];
+  
+      if (isClassMethodFunc) {
+          invokerFnBody += "var thisWired = classParam.toWireType("+dtorStack+", this);\n";
+      }
+  
+      for (var i = 0; i < argCount - 2; ++i) {
+          invokerFnBody += "var arg"+i+"Wired = argType"+i+".toWireType("+dtorStack+", arg"+i+"); // "+argTypes[i+2].name+"\n";
+          args1.push("argType"+i);
+          args2.push(argTypes[i+2]);
+      }
+  
+      if (isClassMethodFunc) {
+          argsListWired = "thisWired" + (argsListWired.length > 0 ? ", " : "") + argsListWired;
+      }
+  
+      invokerFnBody +=
+          (returns?"var rv = ":"") + "invoker(fn"+(argsListWired.length>0?", ":"")+argsListWired+");\n";
+  
+      if (needsDestructorStack) {
+          invokerFnBody += "runDestructors(destructors);\n";
+      } else {
+          for (var i = isClassMethodFunc?1:2; i < argTypes.length; ++i) { // Skip return value at index 0 - it's not deleted here. Also skip class type if not a method.
+              var paramName = (i === 1 ? "thisWired" : ("arg"+(i - 2)+"Wired"));
+              if (argTypes[i].destructorFunction !== null) {
+                  invokerFnBody += paramName+"_dtor("+paramName+"); // "+argTypes[i].name+"\n";
+                  args1.push(paramName+"_dtor");
+                  args2.push(argTypes[i].destructorFunction);
+              }
+          }
+      }
+  
+      if (returns) {
+          invokerFnBody += "var ret = retType.fromWireType(rv);\n" +
+                           "return ret;\n";
+      } else {
+      }
+  
+      invokerFnBody += "}\n";
+  
+      args1.push(invokerFnBody);
+  
+      var invokerFunction = new_(Function, args1).apply(null, args2);
+      return invokerFunction;
+    }
+  
+  function ensureOverloadTable(proto, methodName, humanName) {
+      if (undefined === proto[methodName].overloadTable) {
+          var prevFunc = proto[methodName];
+          // Inject an overload resolver function that routes to the appropriate overload based on the number of arguments.
+          proto[methodName] = function() {
+              // TODO This check can be removed in -O3 level "unsafe" optimizations.
+              if (!proto[methodName].overloadTable.hasOwnProperty(arguments.length)) {
+                  throwBindingError("Function '" + humanName + "' called with an invalid number of arguments (" + arguments.length + ") - expects one of (" + proto[methodName].overloadTable + ")!");
+              }
+              return proto[methodName].overloadTable[arguments.length].apply(this, arguments);
+          };
+          // Move the previous function into the overload table.
+          proto[methodName].overloadTable = [];
+          proto[methodName].overloadTable[prevFunc.argCount] = prevFunc;
+      }
+    }
+  /** @param {number=} numArguments */
+  function exposePublicSymbol(name, value, numArguments) {
+      if (Module.hasOwnProperty(name)) {
+          if (undefined === numArguments || (undefined !== Module[name].overloadTable && undefined !== Module[name].overloadTable[numArguments])) {
+              throwBindingError("Cannot register public name '" + name + "' twice");
+          }
+  
+          // We are exposing a function with the same name as an existing function. Create an overload table and a function selector
+          // that routes between the two.
+          ensureOverloadTable(Module, name, name);
+          if (Module.hasOwnProperty(numArguments)) {
+              throwBindingError("Cannot register multiple overloads of a function with the same number of arguments (" + numArguments + ")!");
+          }
+          // Add the new function into the overload table.
+          Module[name].overloadTable[numArguments] = value;
+      }
+      else {
+          Module[name] = value;
+          if (undefined !== numArguments) {
+              Module[name].numArguments = numArguments;
+          }
+      }
+    }
+  
+  function heap32VectorToArray(count, firstElement) {
+      
+      var array = [];
+      for (var i = 0; i < count; i++) {
+          array.push(HEAP32[(firstElement >> 2) + i]);
+      }
+      return array;
+    }
+  
+  /** @param {number=} numArguments */
+  function replacePublicSymbol(name, value, numArguments) {
+      if (!Module.hasOwnProperty(name)) {
+          throwInternalError('Replacing nonexistant public symbol');
+      }
+      // If there's an overload table for this symbol, replace the symbol in the overload table instead.
+      if (undefined !== Module[name].overloadTable && undefined !== numArguments) {
+          Module[name].overloadTable[numArguments] = value;
+      }
+      else {
+          Module[name] = value;
+          Module[name].argCount = numArguments;
+      }
+    }
+  
+  function dynCallLegacy(sig, ptr, args) {
+      assert(('dynCall_' + sig) in Module, 'bad function pointer type - no table for sig \'' + sig + '\'');
+      if (args && args.length) {
+        // j (64-bit integer) must be passed in as two numbers [low 32, high 32].
+        assert(args.length === sig.substring(1).replace(/j/g, '--').length);
+      } else {
+        assert(sig.length == 1);
+      }
+      var f = Module["dynCall_" + sig];
+      return args && args.length ? f.apply(null, [ptr].concat(args)) : f.call(null, ptr);
+    }
+  /** @param {Object=} args */
+  function dynCall(sig, ptr, args) {
+      // Without WASM_BIGINT support we cannot directly call function with i64 as
+      // part of thier signature, so we rely the dynCall functions generated by
+      // wasm-emscripten-finalize
+      if (sig.includes('j')) {
+        return dynCallLegacy(sig, ptr, args);
+      }
+      assert(getWasmTableEntry(ptr), 'missing table entry in dynCall: ' + ptr);
+      return getWasmTableEntry(ptr).apply(null, args)
+    }
+  function getDynCaller(sig, ptr) {
+      assert(sig.includes('j'), 'getDynCaller should only be called with i64 sigs')
+      var argCache = [];
+      return function() {
+        argCache.length = 0;
+        Object.assign(argCache, arguments);
+        return dynCall(sig, ptr, argCache);
+      };
+    }
+  function embind__requireFunction(signature, rawFunction) {
+      signature = readLatin1String(signature);
+  
+      function makeDynCaller() {
+        if (signature.includes('j')) {
+          return getDynCaller(signature, rawFunction);
+        }
+        return getWasmTableEntry(rawFunction);
+      }
+  
+      var fp = makeDynCaller();
+      if (typeof fp != "function") {
+          throwBindingError("unknown function pointer with signature " + signature + ": " + rawFunction);
+      }
+      return fp;
+    }
+  
+  var UnboundTypeError = undefined;
+  
+  function getTypeName(type) {
+      var ptr = ___getTypeName(type);
+      var rv = readLatin1String(ptr);
+      _free(ptr);
+      return rv;
+    }
+  function throwUnboundTypeError(message, types) {
+      var unboundTypes = [];
+      var seen = {};
+      function visit(type) {
+          if (seen[type]) {
+              return;
+          }
+          if (registeredTypes[type]) {
+              return;
+          }
+          if (typeDependencies[type]) {
+              typeDependencies[type].forEach(visit);
+              return;
+          }
+          unboundTypes.push(type);
+          seen[type] = true;
+      }
+      types.forEach(visit);
+  
+      throw new UnboundTypeError(message + ': ' + unboundTypes.map(getTypeName).join([', ']));
+    }
+  function __embind_register_function(name, argCount, rawArgTypesAddr, signature, rawInvoker, fn) {
+      var argTypes = heap32VectorToArray(argCount, rawArgTypesAddr);
+      name = readLatin1String(name);
+  
+      rawInvoker = embind__requireFunction(signature, rawInvoker);
+  
+      exposePublicSymbol(name, function() {
+          throwUnboundTypeError('Cannot call ' + name + ' due to unbound types', argTypes);
+      }, argCount - 1);
+  
+      whenDependentTypesAreResolved([], argTypes, function(argTypes) {
+          var invokerArgsArray = [argTypes[0] /* return value */, null /* no class 'this'*/].concat(argTypes.slice(1) /* actual params */);
+          replacePublicSymbol(name, craftInvokerFunction(name, invokerArgsArray, null /* no class 'this'*/, rawInvoker, fn), argCount - 1);
+          return [];
+      });
+    }
+
+  function integerReadValueFromPointer(name, shift, signed) {
+      // integers are quite common, so generate very specialized functions
+      switch (shift) {
+          case 0: return signed ?
+              function readS8FromPointer(pointer) { return HEAP8[pointer]; } :
+              function readU8FromPointer(pointer) { return HEAPU8[pointer]; };
+          case 1: return signed ?
+              function readS16FromPointer(pointer) { return HEAP16[pointer >> 1]; } :
+              function readU16FromPointer(pointer) { return HEAPU16[pointer >> 1]; };
+          case 2: return signed ?
+              function readS32FromPointer(pointer) { return HEAP32[pointer >> 2]; } :
+              function readU32FromPointer(pointer) { return HEAPU32[pointer >> 2]; };
+          default:
+              throw new TypeError("Unknown integer type: " + name);
+      }
+    }
+  function __embind_register_integer(primitiveType, name, size, minRange, maxRange) {
+      name = readLatin1String(name);
+      if (maxRange === -1) { // LLVM doesn't have signed and unsigned 32-bit types, so u32 literals come out as 'i32 -1'. Always treat those as max u32.
+          maxRange = 4294967295;
+      }
+  
+      var shift = getShiftFromSize(size);
+  
+      var fromWireType = (value) => value;
+  
+      if (minRange === 0) {
+          var bitshift = 32 - 8*size;
+          fromWireType = (value) => (value << bitshift) >>> bitshift;
+      }
+  
+      var isUnsignedType = (name.includes('unsigned'));
+      var checkAssertions = (value, toTypeName) => {
+          if (typeof value != "number" && typeof value != "boolean") {
+              throw new TypeError('Cannot convert "' + _embind_repr(value) + '" to ' + toTypeName);
+          }
+          if (value < minRange || value > maxRange) {
+              throw new TypeError('Passing a number "' + _embind_repr(value) + '" from JS side to C/C++ side to an argument of type "' + name + '", which is outside the valid range [' + minRange + ', ' + maxRange + ']!');
+          }
+      }
+      var toWireType;
+      if (isUnsignedType) {
+          toWireType = function(destructors, value) {
+              checkAssertions(value, this.name);
+              return value >>> 0;
+          }
+      } else {
+          toWireType = function(destructors, value) {
+              checkAssertions(value, this.name);
+              // The VM will perform JS to Wasm value conversion, according to the spec:
+              // https://www.w3.org/TR/wasm-js-api-1/#towebassemblyvalue
+              return value;
+          }
+      }
+      registerType(primitiveType, {
+          name: name,
+          'fromWireType': fromWireType,
+          'toWireType': toWireType,
+          'argPackAdvance': 8,
+          'readValueFromPointer': integerReadValueFromPointer(name, shift, minRange !== 0),
+          destructorFunction: null, // This type does not need a destructor
+      });
+    }
+
+  function __embind_register_memory_view(rawType, dataTypeIndex, name) {
+      var typeMapping = [
+          Int8Array,
+          Uint8Array,
+          Int16Array,
+          Uint16Array,
+          Int32Array,
+          Uint32Array,
+          Float32Array,
+          Float64Array,
+      ];
+  
+      var TA = typeMapping[dataTypeIndex];
+  
+      function decodeMemoryView(handle) {
+          handle = handle >> 2;
+          var heap = HEAPU32;
+          var size = heap[handle]; // in elements
+          var data = heap[handle + 1]; // byte offset into emscripten heap
+          return new TA(buffer, data, size);
+      }
+  
+      name = readLatin1String(name);
+      registerType(rawType, {
+          name: name,
+          'fromWireType': decodeMemoryView,
+          'argPackAdvance': 8,
+          'readValueFromPointer': decodeMemoryView,
+      }, {
+          ignoreDuplicateRegistrations: true,
+      });
+    }
+
+  function __embind_register_std_string(rawType, name) {
+      name = readLatin1String(name);
+      var stdStringIsUTF8
+      //process only std::string bindings with UTF8 support, in contrast to e.g. std::basic_string<unsigned char>
+      = (name === "std::string");
+  
+      registerType(rawType, {
+          name: name,
+          'fromWireType': function(value) {
+              var length = HEAPU32[value >> 2];
+  
+              var str;
+              if (stdStringIsUTF8) {
+                  var decodeStartPtr = value + 4;
+                  // Looping here to support possible embedded '0' bytes
+                  for (var i = 0; i <= length; ++i) {
+                      var currentBytePtr = value + 4 + i;
+                      if (i == length || HEAPU8[currentBytePtr] == 0) {
+                          var maxRead = currentBytePtr - decodeStartPtr;
+                          var stringSegment = UTF8ToString(decodeStartPtr, maxRead);
+                          if (str === undefined) {
+                              str = stringSegment;
+                          } else {
+                              str += String.fromCharCode(0);
+                              str += stringSegment;
+                          }
+                          decodeStartPtr = currentBytePtr + 1;
+                      }
+                  }
+              } else {
+                  var a = new Array(length);
+                  for (var i = 0; i < length; ++i) {
+                      a[i] = String.fromCharCode(HEAPU8[value + 4 + i]);
+                  }
+                  str = a.join('');
+              }
+  
+              _free(value);
+  
+              return str;
+          },
+          'toWireType': function(destructors, value) {
+              if (value instanceof ArrayBuffer) {
+                  value = new Uint8Array(value);
+              }
+  
+              var getLength;
+              var valueIsOfTypeString = (typeof value == 'string');
+  
+              if (!(valueIsOfTypeString || value instanceof Uint8Array || value instanceof Uint8ClampedArray || value instanceof Int8Array)) {
+                  throwBindingError('Cannot pass non-string to std::string');
+              }
+              if (stdStringIsUTF8 && valueIsOfTypeString) {
+                  getLength = () => lengthBytesUTF8(value);
+              } else {
+                  getLength = () => value.length;
+              }
+  
+              // assumes 4-byte alignment
+              var length = getLength();
+              var ptr = _malloc(4 + length + 1);
+              HEAPU32[ptr >> 2] = length;
+              if (stdStringIsUTF8 && valueIsOfTypeString) {
+                  stringToUTF8(value, ptr + 4, length + 1);
+              } else {
+                  if (valueIsOfTypeString) {
+                      for (var i = 0; i < length; ++i) {
+                          var charCode = value.charCodeAt(i);
+                          if (charCode > 255) {
+                              _free(ptr);
+                              throwBindingError('String has UTF-16 code units that do not fit in 8 bits');
+                          }
+                          HEAPU8[ptr + 4 + i] = charCode;
+                      }
+                  } else {
+                      for (var i = 0; i < length; ++i) {
+                          HEAPU8[ptr + 4 + i] = value[i];
+                      }
+                  }
+              }
+  
+              if (destructors !== null) {
+                  destructors.push(_free, ptr);
+              }
+              return ptr;
+          },
+          'argPackAdvance': 8,
+          'readValueFromPointer': simpleReadValueFromPointer,
+          destructorFunction: function(ptr) { _free(ptr); },
+      });
+    }
+
+  function __embind_register_std_wstring(rawType, charSize, name) {
+      name = readLatin1String(name);
+      var decodeString, encodeString, getHeap, lengthBytesUTF, shift;
+      if (charSize === 2) {
+          decodeString = UTF16ToString;
+          encodeString = stringToUTF16;
+          lengthBytesUTF = lengthBytesUTF16;
+          getHeap = () => HEAPU16;
+          shift = 1;
+      } else if (charSize === 4) {
+          decodeString = UTF32ToString;
+          encodeString = stringToUTF32;
+          lengthBytesUTF = lengthBytesUTF32;
+          getHeap = () => HEAPU32;
+          shift = 2;
+      }
+      registerType(rawType, {
+          name: name,
+          'fromWireType': function(value) {
+              // Code mostly taken from _embind_register_std_string fromWireType
+              var length = HEAPU32[value >> 2];
+              var HEAP = getHeap();
+              var str;
+  
+              var decodeStartPtr = value + 4;
+              // Looping here to support possible embedded '0' bytes
+              for (var i = 0; i <= length; ++i) {
+                  var currentBytePtr = value + 4 + i * charSize;
+                  if (i == length || HEAP[currentBytePtr >> shift] == 0) {
+                      var maxReadBytes = currentBytePtr - decodeStartPtr;
+                      var stringSegment = decodeString(decodeStartPtr, maxReadBytes);
+                      if (str === undefined) {
+                          str = stringSegment;
+                      } else {
+                          str += String.fromCharCode(0);
+                          str += stringSegment;
+                      }
+                      decodeStartPtr = currentBytePtr + charSize;
+                  }
+              }
+  
+              _free(value);
+  
+              return str;
+          },
+          'toWireType': function(destructors, value) {
+              if (!(typeof value == 'string')) {
+                  throwBindingError('Cannot pass non-string to C++ string type ' + name);
+              }
+  
+              // assumes 4-byte alignment
+              var length = lengthBytesUTF(value);
+              var ptr = _malloc(4 + length + charSize);
+              HEAPU32[ptr >> 2] = length >> shift;
+  
+              encodeString(value, ptr + 4, length + charSize);
+  
+              if (destructors !== null) {
+                  destructors.push(_free, ptr);
+              }
+              return ptr;
+          },
+          'argPackAdvance': 8,
+          'readValueFromPointer': simpleReadValueFromPointer,
+          destructorFunction: function(ptr) { _free(ptr); },
+      });
+    }
+
+  function __embind_register_void(rawType, name) {
+      name = readLatin1String(name);
+      registerType(rawType, {
+          isVoid: true, // void return values can be optimized out sometimes
+          name: name,
+          'argPackAdvance': 0,
+          'fromWireType': function() {
+              return undefined;
+          },
+          'toWireType': function(destructors, o) {
+              // TODO: assert if anything else is given?
+              return undefined;
+          },
+      });
+    }
+
+  function _emscripten_memcpy_big(dest, src, num) {
+      HEAPU8.copyWithin(dest, src, src + num);
+    }
+
+  function _emscripten_get_heap_max() {
+      return HEAPU8.length;
+    }
+  
+  function abortOnCannotGrowMemory(requestedSize) {
+      abort('Cannot enlarge memory arrays to size ' + requestedSize + ' bytes (OOM). Either (1) compile with  -s INITIAL_MEMORY=X  with X higher than the current value ' + HEAP8.length + ', (2) compile with  -s ALLOW_MEMORY_GROWTH=1  which allows increasing the size at runtime, or (3) if you want malloc to return NULL (0) instead of this abort, compile with  -s ABORTING_MALLOC=0 ');
+    }
+  function _emscripten_resize_heap(requestedSize) {
+      var oldSize = HEAPU8.length;
+      requestedSize = requestedSize >>> 0;
+      abortOnCannotGrowMemory(requestedSize);
+    }
+embind_init_charCodes();
+BindingError = Module['BindingError'] = extendError(Error, 'BindingError');;
+InternalError = Module['InternalError'] = extendError(Error, 'InternalError');;
+init_emval();;
+UnboundTypeError = Module['UnboundTypeError'] = extendError(Error, 'UnboundTypeError');;
 var ASSERTIONS = true;
 
 
@@ -1996,20 +2906,40 @@ function checkIncomingModuleAPI() {
   ignoredModuleProp('fetchSettings');
 }
 var asmLibraryArg = {
-  
+  "_embind_register_bigint": __embind_register_bigint,
+  "_embind_register_bool": __embind_register_bool,
+  "_embind_register_emval": __embind_register_emval,
+  "_embind_register_float": __embind_register_float,
+  "_embind_register_function": __embind_register_function,
+  "_embind_register_integer": __embind_register_integer,
+  "_embind_register_memory_view": __embind_register_memory_view,
+  "_embind_register_std_string": __embind_register_std_string,
+  "_embind_register_std_wstring": __embind_register_std_wstring,
+  "_embind_register_void": __embind_register_void,
+  "emscripten_memcpy_big": _emscripten_memcpy_big,
+  "emscripten_resize_heap": _emscripten_resize_heap
 };
 var asm = createWasm();
 /** @type {function(...*):?} */
 var ___wasm_call_ctors = Module["___wasm_call_ctors"] = createExportWrapper("__wasm_call_ctors");
 
 /** @type {function(...*):?} */
-var _add = Module["_add"] = createExportWrapper("add");
+var ___getTypeName = Module["___getTypeName"] = createExportWrapper("__getTypeName");
+
+/** @type {function(...*):?} */
+var ___embind_register_native_and_builtin_types = Module["___embind_register_native_and_builtin_types"] = createExportWrapper("__embind_register_native_and_builtin_types");
 
 /** @type {function(...*):?} */
 var ___errno_location = Module["___errno_location"] = createExportWrapper("__errno_location");
 
 /** @type {function(...*):?} */
 var ___stdio_exit = Module["___stdio_exit"] = createExportWrapper("__stdio_exit");
+
+/** @type {function(...*):?} */
+var _malloc = Module["_malloc"] = createExportWrapper("malloc");
+
+/** @type {function(...*):?} */
+var _free = Module["_free"] = createExportWrapper("free");
 
 /** @type {function(...*):?} */
 var _emscripten_stack_init = Module["_emscripten_stack_init"] = function() {
@@ -2048,8 +2978,8 @@ var stackAlloc = Module["stackAlloc"] = createExportWrapper("stackAlloc");
 
 unexportedRuntimeFunction('intArrayFromString', false);
 unexportedRuntimeFunction('intArrayToString', false);
-Module["ccall"] = ccall;
-Module["cwrap"] = cwrap;
+unexportedRuntimeFunction('ccall', false);
+unexportedRuntimeFunction('cwrap', false);
 unexportedRuntimeFunction('setValue', false);
 unexportedRuntimeFunction('getValue', false);
 unexportedRuntimeFunction('allocate', false);
@@ -2261,6 +3191,98 @@ unexportedRuntimeFunction('GLFW', false);
 unexportedRuntimeFunction('GLEW', false);
 unexportedRuntimeFunction('IDBStore', false);
 unexportedRuntimeFunction('runAndAbortIfError', false);
+unexportedRuntimeFunction('InternalError', false);
+unexportedRuntimeFunction('BindingError', false);
+unexportedRuntimeFunction('UnboundTypeError', false);
+unexportedRuntimeFunction('PureVirtualError', false);
+unexportedRuntimeFunction('init_embind', false);
+unexportedRuntimeFunction('throwInternalError', false);
+unexportedRuntimeFunction('throwBindingError', false);
+unexportedRuntimeFunction('throwUnboundTypeError', false);
+unexportedRuntimeFunction('ensureOverloadTable', false);
+unexportedRuntimeFunction('exposePublicSymbol', false);
+unexportedRuntimeFunction('replacePublicSymbol', false);
+unexportedRuntimeFunction('extendError', false);
+unexportedRuntimeFunction('createNamedFunction', false);
+unexportedRuntimeFunction('registeredInstances', false);
+unexportedRuntimeFunction('getBasestPointer', false);
+unexportedRuntimeFunction('registerInheritedInstance', false);
+unexportedRuntimeFunction('unregisterInheritedInstance', false);
+unexportedRuntimeFunction('getInheritedInstance', false);
+unexportedRuntimeFunction('getInheritedInstanceCount', false);
+unexportedRuntimeFunction('getLiveInheritedInstances', false);
+unexportedRuntimeFunction('registeredTypes', false);
+unexportedRuntimeFunction('awaitingDependencies', false);
+unexportedRuntimeFunction('typeDependencies', false);
+unexportedRuntimeFunction('registeredPointers', false);
+unexportedRuntimeFunction('registerType', false);
+unexportedRuntimeFunction('whenDependentTypesAreResolved', false);
+unexportedRuntimeFunction('embind_charCodes', false);
+unexportedRuntimeFunction('embind_init_charCodes', false);
+unexportedRuntimeFunction('readLatin1String', false);
+unexportedRuntimeFunction('getTypeName', false);
+unexportedRuntimeFunction('heap32VectorToArray', false);
+unexportedRuntimeFunction('requireRegisteredType', false);
+unexportedRuntimeFunction('getShiftFromSize', false);
+unexportedRuntimeFunction('integerReadValueFromPointer', false);
+unexportedRuntimeFunction('enumReadValueFromPointer', false);
+unexportedRuntimeFunction('floatReadValueFromPointer', false);
+unexportedRuntimeFunction('simpleReadValueFromPointer', false);
+unexportedRuntimeFunction('runDestructors', false);
+unexportedRuntimeFunction('new_', false);
+unexportedRuntimeFunction('craftInvokerFunction', false);
+unexportedRuntimeFunction('embind__requireFunction', false);
+unexportedRuntimeFunction('tupleRegistrations', false);
+unexportedRuntimeFunction('structRegistrations', false);
+unexportedRuntimeFunction('genericPointerToWireType', false);
+unexportedRuntimeFunction('constNoSmartPtrRawPointerToWireType', false);
+unexportedRuntimeFunction('nonConstNoSmartPtrRawPointerToWireType', false);
+unexportedRuntimeFunction('init_RegisteredPointer', false);
+unexportedRuntimeFunction('RegisteredPointer', false);
+unexportedRuntimeFunction('RegisteredPointer_getPointee', false);
+unexportedRuntimeFunction('RegisteredPointer_destructor', false);
+unexportedRuntimeFunction('RegisteredPointer_deleteObject', false);
+unexportedRuntimeFunction('RegisteredPointer_fromWireType', false);
+unexportedRuntimeFunction('runDestructor', false);
+unexportedRuntimeFunction('releaseClassHandle', false);
+unexportedRuntimeFunction('finalizationRegistry', false);
+unexportedRuntimeFunction('detachFinalizer_deps', false);
+unexportedRuntimeFunction('detachFinalizer', false);
+unexportedRuntimeFunction('attachFinalizer', false);
+unexportedRuntimeFunction('makeClassHandle', false);
+unexportedRuntimeFunction('init_ClassHandle', false);
+unexportedRuntimeFunction('ClassHandle', false);
+unexportedRuntimeFunction('ClassHandle_isAliasOf', false);
+unexportedRuntimeFunction('throwInstanceAlreadyDeleted', false);
+unexportedRuntimeFunction('ClassHandle_clone', false);
+unexportedRuntimeFunction('ClassHandle_delete', false);
+unexportedRuntimeFunction('deletionQueue', false);
+unexportedRuntimeFunction('ClassHandle_isDeleted', false);
+unexportedRuntimeFunction('ClassHandle_deleteLater', false);
+unexportedRuntimeFunction('flushPendingDeletes', false);
+unexportedRuntimeFunction('delayFunction', false);
+unexportedRuntimeFunction('setDelayFunction', false);
+unexportedRuntimeFunction('RegisteredClass', false);
+unexportedRuntimeFunction('shallowCopyInternalPointer', false);
+unexportedRuntimeFunction('downcastPointer', false);
+unexportedRuntimeFunction('upcastPointer', false);
+unexportedRuntimeFunction('validateThis', false);
+unexportedRuntimeFunction('char_0', false);
+unexportedRuntimeFunction('char_9', false);
+unexportedRuntimeFunction('makeLegalFunctionName', false);
+unexportedRuntimeFunction('emval_handle_array', false);
+unexportedRuntimeFunction('emval_free_list', false);
+unexportedRuntimeFunction('emval_symbols', false);
+unexportedRuntimeFunction('init_emval', false);
+unexportedRuntimeFunction('count_emval_handles', false);
+unexportedRuntimeFunction('get_first_emval', false);
+unexportedRuntimeFunction('getStringOrSymbol', false);
+unexportedRuntimeFunction('Emval', false);
+unexportedRuntimeFunction('emval_newers', false);
+unexportedRuntimeFunction('craftEmvalAllocator', false);
+unexportedRuntimeFunction('emval_get_global', false);
+unexportedRuntimeFunction('emval_methodCallers', false);
+unexportedRuntimeFunction('emval_registeredMethods', false);
 unexportedRuntimeFunction('warnOnce', false);
 unexportedRuntimeFunction('stackSave', false);
 unexportedRuntimeFunction('stackRestore', false);
