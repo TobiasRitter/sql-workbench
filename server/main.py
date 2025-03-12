@@ -10,17 +10,8 @@ class Hero(SQLModel, table=True):
 if __name__ == "__main__":
     logging.basicConfig()
     logger = logging.getLogger("sqlalchemy.engine")
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
     engine = create_engine("sqlite:///database.db")
 
     SQLModel.metadata.drop_all(engine)
     SQLModel.metadata.create_all(engine)
-
-    with Session(engine) as session:
-        hero = Hero(name="Deadpool")
-        session.add(hero)
-        session.commit()
-        print("Hero created:", hero)
-
-        hero = session.get(Hero, 1)
-        print("Hero retrieved:", hero)
