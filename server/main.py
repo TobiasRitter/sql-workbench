@@ -1,5 +1,10 @@
 import logging
-from sqlmodel import SQLModel, create_engine
+from sqlmodel import Field, SQLModel, Session, create_engine
+
+
+class Hero(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    name: str
 
 
 if __name__ == "__main__":
@@ -10,3 +15,12 @@ if __name__ == "__main__":
 
     SQLModel.metadata.drop_all(engine)
     SQLModel.metadata.create_all(engine)
+
+    with Session(engine) as session:
+        hero = Hero(name="Deadpool")
+        session.add(hero)
+        session.commit()
+        print("Hero created:", hero)
+
+        hero = session.get(Hero, 1)
+        print("Hero retrieved:", hero)
