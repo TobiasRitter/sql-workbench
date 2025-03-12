@@ -1,0 +1,15 @@
+2025-03-12 10:54:48,989 - sqlalchemy.engine.Engine - INFO - BEGIN (implicit)
+2025-03-12 10:54:48,989 - sqlalchemy.engine.Engine - INFO - PRAGMA main.table_info("hero")
+2025-03-12 10:54:48,989 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-03-12 10:54:48,989 - sqlalchemy.engine.Engine - INFO - PRAGMA temp.table_info("hero")
+2025-03-12 10:54:48,989 - sqlalchemy.engine.Engine - INFO - [raw sql] ()
+2025-03-12 10:54:48,989 - sqlalchemy.engine.Engine - INFO - 
+CREATE TABLE hero (
+	id INTEGER NOT NULL, 
+	name VARCHAR NOT NULL, 
+	PRIMARY KEY (id)
+)
+
+
+2025-03-12 10:54:48,989 - sqlalchemy.engine.Engine - INFO - [no key 0.00006s] ()
+2025-03-12 10:54:48,992 - sqlalchemy.engine.Engine - INFO - COMMIT

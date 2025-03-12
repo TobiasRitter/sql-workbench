@@ -8,10 +8,11 @@ class Hero(SQLModel, table=True):
 
 
 if __name__ == "__main__":
-    logging.basicConfig()
+    engine = create_engine("sqlite:///database.db")
+    SQLModel.metadata.drop_all(engine)
+
+    logging.basicConfig(filename='log.txt', filemode='a', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     logger = logging.getLogger("sqlalchemy.engine")
     logger.setLevel(logging.INFO)
-    engine = create_engine("sqlite:///database.db")
-
-    SQLModel.metadata.drop_all(engine)
+    
     SQLModel.metadata.create_all(engine)
