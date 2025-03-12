@@ -11,7 +11,7 @@ class Hero(SQLModel, table=True):
     name: str
 
 
-def get_session(token: str) -> Generator[Session, None, None]:
+def get_session() -> Generator[Session, None, None]:
     engine = create_engine("sqlite:///database.db")
     with Session(engine) as session:
         yield session
