@@ -1,0 +1,18 @@
+
+CREATE TABLE team (
+	id INTEGER NOT NULL, 
+	name VARCHAR NOT NULL, 
+	PRIMARY KEY (id)
+)
+
+
+
+CREATE TABLE hero (
+	id INTEGER NOT NULL, 
+	name VARCHAR NOT NULL, 
+	team_id INTEGER, 
+	PRIMARY KEY (id), 
+	FOREIGN KEY(team_id) REFERENCES team (id)
+)
+
+
