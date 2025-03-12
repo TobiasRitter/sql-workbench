@@ -17,9 +17,8 @@ class Hero(SQLModel, table=True):
     team: Team = Relationship(back_populates="heroes")
 
 
-class CreateFilter(logging.Filter):
-    def filter(self, record):
-        return "CREATE" in record.getMessage()
+def filterCreate(record: logging.LogRecord) -> bool:
+    return "CREATE" in record.getMessage()
 
 
 if __name__ == "__main__":
@@ -30,7 +29,7 @@ if __name__ == "__main__":
     logger = logging.getLogger("sqlalchemy.engine")
     logger.setLevel(logging.INFO)
     handler = logging.FileHandler("create.sql", mode="w")
-    handler.addFilter(CreateFilter())
+    handler.addFilter(filterCreate)
     logger.addHandler(handler)
 
     SQLModel.metadata.create_all(engine)
