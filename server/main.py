@@ -29,8 +29,7 @@ if __name__ == "__main__":
     # Set up logging
     logger = logging.getLogger("sqlalchemy.engine")
     logger.setLevel(logging.INFO)
-    handler = logging.FileHandler("log.txt", mode="w")
-    handler.setFormatter(logging.Formatter("%(message)s"))
+    handler = logging.FileHandler("create.sql", mode="w")
     handler.addFilter(CreateFilter())
     logger.addHandler(handler)
 

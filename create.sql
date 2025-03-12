@@ -1,12 +1,3 @@
-BEGIN (implicit)
-PRAGMA main.table_info("team")
-[raw sql] ()
-PRAGMA temp.table_info("team")
-[raw sql] ()
-PRAGMA main.table_info("hero")
-[raw sql] ()
-PRAGMA temp.table_info("hero")
-[raw sql] ()
 
 CREATE TABLE team (
 	id INTEGER NOT NULL, 
@@ -15,7 +6,6 @@ CREATE TABLE team (
 )
 
 
-[no key 0.00004s] ()
 
 CREATE TABLE hero (
 	id INTEGER NOT NULL, 
@@ -26,5 +16,3 @@ CREATE TABLE hero (
 )
 
 
-[no key 0.00005s] ()
-COMMIT
